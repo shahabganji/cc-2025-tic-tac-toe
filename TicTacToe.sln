@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A6619399-58B2-4FEA-B4BF-D23F81F8FB02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{15193753-5D47-4297-B811-62C0800D7D32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Web", "src\TicTacToe.Web\TicTacToe.Web.csproj", "{0FAED4EA-C46E-41CB-98C7-D4C70045C33A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0FAED4EA-C46E-41CB-98C7-D4C70045C33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FAED4EA-C46E-41CB-98C7-D4C70045C33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FAED4EA-C46E-41CB-98C7-D4C70045C33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FAED4EA-C46E-41CB-98C7-D4C70045C33A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TicTacToe.Web</title>
+    <base href="/" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="TicTacToe.Web.styles.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        
+        <svg class="loading-progress"
+                width="200" height="200" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+            <!-- Define Water Color -->
+            <defs>
+                <clipPath id="clipShape44">
+                    <polygon points="0,0 0,140 90.1449,140 63.1449,90.4304 
+                          87.9449,77.1304 122.0449,140 140,140 140,0" />
+                </clipPath>
+            </defs>
+
+            <!-- Background Polygon Outline -->
+            <polygon points="0,0 0,140 90.1449,140 63.1449,90.4304 
+                  87.9449,77.1304 122.0449,140 140,140 140,0" stroke="none" fill="none" />
+
+            <!-- Water with Clipping -->
+            <g clip-path="url(#clipShape44)">
+                <!-- Water Base (Dynamic Level) -->
+                <rect id="water" x="0" y="140" width="140" height="140">
+                    <animate attributeName="y" from="140" to="0" dur="3s" fill="freeze" />
+                </rect>
+                <!-- Wavy Water Effect -->
+                <path id="wave" d="M0,140 Q35,130 70,140 T140,140 V140 H0 Z" fill="#1EAEE9" opacity="1" >
+                    <animate attributeName="d" values="M0,140 Q35,130 70,140 T140,140 V140 H0 Z;
+                          M0,140 Q35,135 70,125 T140,140 V140 H0 Z;
+                          M0,140 Q35,130 70,140 T140,140 V140 H0 Z" dur="1.5s" repeatCount="indefinite" />
+
+                    <animateTransform attributeName="transform" from="0 1" to="0 -140" dur="3s" fill="freeze" />
+                </path>
+
+                <!-- Bubbles Group -->
+                <g fill="white" opacity="0.5">
+                    <!-- Bubble 1 -->
+                    <circle cx="30" cy="130" r="4">
+                        <animate attributeName="cy" from="130" to="20" dur="3s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" from="0.5" to="0" dur="3s" repeatCount="indefinite" />
+                    </circle>
+
+                    <!-- Bubble 2 -->
+                    <circle cx="50" cy="135" r="6">
+                        <animate attributeName="cy" from="135" to="25" dur="4s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" from="0.5" to="0" dur="4s" repeatCount="indefinite" />
+                    </circle>
+
+                    <!-- Bubble 3 -->
+                    <circle cx="80" cy="128" r="3">
+                        <animate attributeName="cy" from="128" to="15" dur="2.5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" from="0.5" to="0" dur="2.5s" repeatCount="indefinite" />
+                    </circle>
+
+                    <!-- Bubble 4 -->
+                    <circle cx="100" cy="140" r="5">
+                        <animate attributeName="cy" from="140" to="30" dur="3.5s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" from="0.5" to="0" dur="3.5s" repeatCount="indefinite" />
+                    </circle>
+
+                    <!-- Bubble 5 -->
+                    <circle cx="120" cy="132" r="4">
+                        <animate attributeName="cy" from="132" to="20" dur="3s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" from="0.5" to="0" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                </g>
+            </g>
+        </svg>
+        
+    </div>
+
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="." class="reload">Reload</a>
+        <span class="dismiss">🗙</span>
+    </div>
+    
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
+
+</html>
