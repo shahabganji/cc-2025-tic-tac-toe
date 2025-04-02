@@ -12,6 +12,7 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{0FAED4EA-C46E-41CB-98C7-D4C70045C33A} = {A6619399-58B2-4FEA-B4BF-D23F81F8FB02}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0FAED4EA-C46E-41CB-98C7-D4C70045C33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

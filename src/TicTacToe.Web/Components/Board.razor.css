@@ -1,0 +1,21 @@
+
+.ttt-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 6px;
+    padding: 6px;
+    border-radius: 10px;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    background-color: #242323;
+}
+
+body.dark .ttt-board {
+    background-color: var(--dark-board);
+}
+
+body.light .ttt-board {
+    background-color: var(--light-board);
+}

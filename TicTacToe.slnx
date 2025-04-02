@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Folder Name="/src/">
+    <Project Path="src\TicTacToe.Web\TicTacToe.Web.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/test/" />
+</Solution>

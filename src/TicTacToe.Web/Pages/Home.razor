@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using TicTacToe.Web.Components
 
 <PageTitle>Home</PageTitle>
 
@@ -6,7 +7,7 @@
 <div class="game-container">
     <h1>Tic Tac Toe</h1>
 
-    <div id="board" class="ttt-board"></div>
+    <Board></Board>    
 
     <p class="status" id="statusText">Current Turn: X</p>
 
@@ -16,4 +17,4 @@
     <audio id="clickSound" src="click.mp3" preload="auto"></audio>
 </div>
 
-<script src="lib/tictactoe.js"></script>
+
