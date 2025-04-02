@@ -8,10 +8,11 @@ function toggleTheme() {
     document.body.classList.toggle("light");
 }
 
-function showConfetti() {
+function showConfetti(isWinner) {
     confetti({
         particleCount: 100,
         spread: 70,
-        origin: {y: 0.6}
+        origin: {y: 0.6},
+        colors: isWinner ? undefined : ['#ff0000']
     });
 }

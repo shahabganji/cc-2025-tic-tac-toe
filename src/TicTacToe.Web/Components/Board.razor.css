@@ -1,7 +1,13 @@
-
 /*  Board */
 
-.ttt-board {
+.board-wrapper {
+    position: relative;
+    width: fit-content;
+    margin: auto;
+}
+
+.board {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
@@ -10,7 +16,7 @@
     border-radius: 10px;
     margin: 20px auto;
     transition: background-color 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     background-color: #242323;
 }
 
@@ -21,6 +27,32 @@ body.dark .ttt-board {
 body.light .ttt-board {
     background-color: var(--light-board);
 }
+
+.board.lose {
+    border: 2px solid var(--x-color);
+    box-shadow: 0 0 12px var(--x-color);
+    position: relative;
+    animation: shake 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    50% {
+        transform: translateX(10px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
 
 
 .status {
@@ -40,5 +72,5 @@ body.light .ttt-board {
 }
 
 .restart:hover, .toggle-theme:hover {
-    background-color: #1298c6;
+    background-color: var(--hover-bg);
 }

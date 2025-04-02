@@ -1,13 +1,18 @@
 @inject IJSRuntime Js
 
-<div class="ttt-board">
-    @for (var i = 0; i < 9; i++)
-    {
-        var localIndex = i;
-        <Cell Value="@_boardCells[i]" OnClick="async () => { await HandleClick(localIndex); }"
-              IsWinner="@_winningCombo.Contains(i)"/>
-    }
+
+<div class="board-wrapper">
+    <div class="board @(_isLoser ? "lose" : "")">
+        @for (var i = 0; i < 9; i++)
+        {
+            var localIndex = i;
+            <Cell Value="@_boardCells[i]" OnClick="async () => { await HandleClick(localIndex); }"
+                  IsWinner="@_winningCombo.Contains(i)"/>
+        }
+    </div>
 </div>
+
+<hr/>
 
 <p class="status">
     @if (!string.IsNullOrEmpty(_winner))
@@ -32,14 +37,16 @@
 
     public enum Player
     {
-        X, O
+        X,
+        O
     }
-    
+
     private string[] _boardCells = new string[9];
     private Player _currentPlayer = Player.X;
     private string? _winner = null;
     private HashSet<int> _winningCombo = [];
     private bool IsDraw => _boardCells.All(c => !string.IsNullOrEmpty(c)) && _winner == null;
+    private bool _isLoser = false;
     private bool _playedConfetti = false;
 
     private async Task HandleClick(int index)
@@ -54,12 +61,18 @@
 
         if (_winner == null)
         {
-            _currentPlayer = _currentPlayer ==  Player.X ? Player.O : Player.X;
+            _currentPlayer = _currentPlayer == Player.X ? Player.O : Player.X;
         }
         else if (!_playedConfetti)
         {
             _playedConfetti = true;
-            await Js.InvokeVoidAsync("showConfetti");
+            await Js.InvokeVoidAsync("showConfetti", args: true);
+
+            await Task.Delay(3000);
+            await Js.InvokeVoidAsync("showConfetti", args: false);
+
+            await Task.Delay(3000);
+            _isLoser = true;
         }
     }
 
@@ -91,6 +104,8 @@
         _winningCombo.Clear();
         _currentPlayer = Player.X;
         _playedConfetti = false;
+
+        _isLoser = false;
     }
 
 }
