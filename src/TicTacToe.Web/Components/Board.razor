@@ -2,6 +2,9 @@
 
 
 <div class="board-wrapper">
+    
+    <div>@GameName</div>
+    
     <div class="board @(_isLoser ? "lose" : "")">
         @for (var i = 0; i < 9; i++)
         {
@@ -41,6 +44,8 @@
         O
     }
 
+    [Parameter] public string? GameName { get; set; }
+    
     private string[] _boardCells = new string[9];
     private Player _currentPlayer = Player.X;
     private string? _winner = null;

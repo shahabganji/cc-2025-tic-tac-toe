@@ -1,0 +1,14 @@
+.home-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.game-title {
+    text-align: center;
+    color: white;
+    margin-bottom: 10px;
+}

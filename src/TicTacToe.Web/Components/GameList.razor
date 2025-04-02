@@ -1,3 +1,4 @@
+@using TicTacToe.Web.Contracts
 <div class="game-list">
     <h4>Active Games</h4>
 
@@ -5,13 +6,13 @@
     {
         <div class="game-item">
             <span>@game.Name</span>
-            <button @onclick="() => JoinGame(game.Id)">Join</button>
+            <button @onclick="() => OnJoin.InvokeAsync(game)">Join</button>
         </div>
     }
 </div>
 
 @code {
-    private record GameInfo(int Id, string Name);
+    [Parameter] public EventCallback<GameInfo> OnJoin { get; set; }
 
     private List<GameInfo> _availableGames =
     [
@@ -19,10 +20,4 @@
         new(2, "Game #2"),
         new(3, "Game #3")
     ];
-
-    private void JoinGame(int gameId)
-    {
-        Console.WriteLine($"[GameList] Joining game {gameId}...");
-        // Later: Raise event or load board state
-    }
 }

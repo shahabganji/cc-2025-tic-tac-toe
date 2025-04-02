@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using TicTacToe.Web.Components
+@using TicTacToe.Web.Contracts
 
 <PageTitle>Home</PageTitle>
 
@@ -8,25 +9,30 @@
     <h1 style="color: #0dcaf0">Tic Tac Toe</h1>
 
     <hr/>
+
+
     <div class="home-layout">
-        <Board/>
-        <GameList/>
+        @if (_currentGame != null)
+        {
+            <div>
+                <h3 class="game-title">Playing: @_currentGame.Name</h3>
+                <Board GameName="@_currentGame.Name" />
+            </div>
+        }
+
+        <GameList OnJoin="HandleJoin" />
     </div>
+    
 
     <hr/>
     <button class="toggle-theme" onclick="toggleTheme()">Toggle Theme</button>
 </div>
 
+@code {
+    private GameInfo? _currentGame;
 
-<style>
-    .home-layout {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 40px;
-        margin-top: 30px;
-        flex-wrap: wrap;
+    private void HandleJoin(GameInfo game)
+    {
+        _currentGame = game;
     }
-</style>
-
-
+}
