@@ -2,6 +2,18 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
 
-Welcome to your new app.
+<div class="game-container">
+    <h1>Tic Tac Toe</h1>
+
+    <div id="board" class="ttt-board"></div>
+
+    <p class="status" id="statusText">Current Turn: X</p>
+
+    <button class="restart" onclick="restartGame()">Restart</button>
+    <button class="toggle-theme" onclick="toggleTheme()">Toggle Theme</button>
+
+    <audio id="clickSound" src="click.mp3" preload="auto"></audio>
+</div>
+
+<script src="lib/tictactoe.js"></script>

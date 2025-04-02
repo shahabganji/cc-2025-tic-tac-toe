@@ -1,0 +1,132 @@
+
+:root {
+    --dark-bg: #2C3747;
+    --light-bg: #ffffff;
+
+    --dark-board: #242323;
+    --light-board: #dddddd;
+
+    --x-color: #FF6B6B;
+    --o-color: #1EAEE9;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s ease;
+    background-color: #2C3747;
+}
+
+body.dark {
+    background-color: var(--dark-bg);
+    color: white;
+}
+
+body.light {
+    background-color: var(--light-bg);
+    color: #222;
+}
+
+.game-container {
+    text-align: center;
+}
+
+.ttt-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 6px;
+    padding: 6px;
+    border-radius: 10px;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    background-color: #242323;
+}
+
+body.dark .ttt-board {
+    background-color: var(--dark-board);
+}
+
+body.light .ttt-board {
+    background-color: var(--light-board);
+}
+
+.cell {
+    background-color: var(--dark-bg);
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    user-select: none;
+    color: white;
+    box-sizing: border-box;
+    border: 1px solid rgba(255, 255, 255, 0.1); /* subtle grid lines */
+}
+
+body.light .cell {
+    background-color: var(--light-bg);
+}
+
+body.dark .cell {
+    background-color: var(--light-bg);
+}
+
+.cell.x {
+    color: var(--x-color);
+    animation: pop-in 0.2s ease;
+}
+
+.cell.o {
+    color: var(--o-color);
+    animation: pop-in 0.2s ease;
+}
+
+.cell:not(.x):not(.o):hover {
+    background-color: var(--o-color);
+    color: white;
+}
+
+.status {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+.restart, .toggle-theme {
+    margin: 10px 5px;
+    background-color: var(--o-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.restart:hover, .toggle-theme:hover {
+    background-color: #1298c6;
+}
+
+
+.cell.x.winner,
+.cell.o.winner {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    animation: winner-pop 0.4s ease-in-out 1, glow 1s ease-in-out infinite alternate;
+}
+
+@keyframes winner-pop {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.3); }
+    60%  { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
