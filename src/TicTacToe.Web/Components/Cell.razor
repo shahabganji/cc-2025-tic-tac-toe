@@ -1,0 +1,14 @@
+<div class="cell @Value?.ToLower() @(IsWinner ? "winner" : "")" @onclick="TriggerOnClick">
+    @Value
+</div>
+
+@code {
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public bool IsWinner { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private async Task TriggerOnClick()
+    {
+        await OnClick.InvokeAsync();
+    }
+}

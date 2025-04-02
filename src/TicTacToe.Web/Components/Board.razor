@@ -1,8 +1,96 @@
+@inject IJSRuntime Js
 
-<div id="board" class="ttt-board">
+<div class="ttt-board">
+    @for (var i = 0; i < 9; i++)
+    {
+        var localIndex = i;
+        <Cell Value="@_boardCells[i]" OnClick="async () => { await HandleClick(localIndex); }"
+              IsWinner="@_winningCombo.Contains(i)"/>
+    }
 </div>
 
-<script src="lib/tictactoe.js"></script>
+<p class="status">
+    @if (!string.IsNullOrEmpty(_winner))
+    {
+        <span>@_winner wins!</span>
+    }
+    else if (IsDraw)
+    {
+        <span>It's a draw!</span>
+    }
+    else
+    {
+        <span>Current Turn: @_currentPlayer</span>
+    }
+</p>
+
+<button class="restart" @onclick="Restart">Restart</button>
+
+<audio id="clickSound" src="sounds/click.mp3" preload="auto"></audio>
 
 @code {
+
+    public enum Player
+    {
+        X, O
+    }
+    
+    private string[] _boardCells = new string[9];
+    private Player _currentPlayer = Player.X;
+    private string? _winner = null;
+    private HashSet<int> _winningCombo = [];
+    private bool IsDraw => _boardCells.All(c => !string.IsNullOrEmpty(c)) && _winner == null;
+    private bool _playedConfetti = false;
+
+    private async Task HandleClick(int index)
+    {
+        Console.WriteLine(index);
+        if (!string.IsNullOrEmpty(_boardCells[index]) || _winner != null)
+            return;
+
+        _boardCells[index] = _currentPlayer.ToString();
+
+        EvaluateGame();
+
+        if (_winner == null)
+        {
+            _currentPlayer = _currentPlayer ==  Player.X ? Player.O : Player.X;
+        }
+        else if (!_playedConfetti)
+        {
+            _playedConfetti = true;
+            await Js.InvokeVoidAsync("showConfetti");
+        }
+    }
+
+    private void EvaluateGame()
+    {
+        int[][] wins =
+        [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        foreach (var combo in wins)
+        {
+            var (a, b, c) = (combo[0], combo[1], combo[2]);
+            if (string.IsNullOrEmpty(_boardCells[a]) || _boardCells[a] != _boardCells[b] || _boardCells[b] != _boardCells[c])
+                continue;
+
+            _winner = _boardCells[a];
+            _winningCombo = combo.ToHashSet();
+            return;
+        }
+    }
+
+    private void Restart()
+    {
+        _boardCells = new string[9];
+        _winner = null;
+        _winningCombo.Clear();
+        _currentPlayer = Player.X;
+        _playedConfetti = false;
+    }
+
 }

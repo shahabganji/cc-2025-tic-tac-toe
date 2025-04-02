@@ -1,4 +1,6 @@
 
+/*  Board */
+
 .ttt-board {
     display: grid;
     grid-template-columns: repeat(3, 100px);
@@ -18,4 +20,25 @@ body.dark .ttt-board {
 
 body.light .ttt-board {
     background-color: var(--light-board);
+}
+
+
+.status {
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+.restart, .toggle-theme {
+    margin: 10px 5px;
+    background-color: var(--o-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.restart:hover, .toggle-theme:hover {
+    background-color: #1298c6;
 }
