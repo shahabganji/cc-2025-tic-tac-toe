@@ -1,0 +1,52 @@
+/* Default (dark) theme */
+.game-list {
+    padding: 20px;
+    background-color: #374252;
+    border-radius: 10px;
+    color: white;
+    width: 180px;
+    transition: background-color 0.3s ease;
+}
+
+.game-list h4 {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.game-item button {
+    background-color: #1EAEE9;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.game-item button:hover {
+    background-color: #1298c6;
+}
+
+/* Light theme overrides */
+body.light .game-list {
+    background-color: #f5f5f5;
+    color: #222;
+    border: 1px solid #ddd;
+}
+
+body.light .game-item button {
+    background-color: #1EAEE9;
+    color: white;
+}
+
+body.light .game-item button:hover {
+    background-color: #1298c6;
+}

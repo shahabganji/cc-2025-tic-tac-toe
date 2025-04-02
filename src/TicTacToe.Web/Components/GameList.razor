@@ -1,0 +1,28 @@
+<div class="game-list">
+    <h4>Active Games</h4>
+
+    @foreach (var game in _availableGames)
+    {
+        <div class="game-item">
+            <span>@game.Name</span>
+            <button @onclick="() => JoinGame(game.Id)">Join</button>
+        </div>
+    }
+</div>
+
+@code {
+    private record GameInfo(int Id, string Name);
+
+    private List<GameInfo> _availableGames =
+    [
+        new(1, "Game #1"),
+        new(2, "Game #2"),
+        new(3, "Game #3")
+    ];
+
+    private void JoinGame(int gameId)
+    {
+        Console.WriteLine($"[GameList] Joining game {gameId}...");
+        // Later: Raise event or load board state
+    }
+}
