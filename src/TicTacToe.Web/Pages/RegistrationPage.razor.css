@@ -1,0 +1,50 @@
+.player-card {
+    background-color: #242323;
+    border-radius: 12px;
+    width: 440px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(30, 174, 233, 0.3); /* light blue shadow */
+    padding: 30px;
+}
+
+.player-card label {
+    color: var(--o-color); /* Force label to light blue */
+}
+
+.player-input {
+    background-color: var(--dark-bg);
+    border: none;
+    border-bottom: 2px solid var(--o-color);
+    color: white;
+    font-size: 1rem;
+    border-radius: 0;
+    padding: 0.75rem 0.5rem;
+}
+
+.player-input:focus {
+    background-color: var(--dark-bg);
+    color: white;
+    box-shadow: none;
+    border-bottom: 2px solid var(--x-color);
+    outline: none;
+}
+
+.register-button {
+    background-color: var(--o-color) !important;
+    color: white;
+    font-weight: 600;
+    border: none;
+    transition: background-color 0.2s ease;
+    padding: 0.6rem;
+    font-size: 1.05rem;
+    border-radius: 6px;
+    margin-top: 15px;
+}
+
+.register-button:hover,
+.register-button:active {
+    background-color: var(--x-color) !important;
+}

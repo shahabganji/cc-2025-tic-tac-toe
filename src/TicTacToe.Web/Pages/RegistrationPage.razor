@@ -1,0 +1,49 @@
+@page "/"
+@using System.ComponentModel.DataAnnotations
+
+<EditForm Model="this" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card player-card">
+            <div class="mb-4">
+                <label for="PlayerName" class="form-label">Enter your name:</label>
+                <InputText id="PlayerName" class="form-control player-input" @bind-Value="PlayerName" @ref="_inputRef" />
+                <ValidationMessage For="@(() => PlayerName)" />
+            </div>
+
+            <button type="submit" class="btn register-button w-100">Enter Games</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+
+    [Required(ErrorMessage = "Please enter your name.")]
+    public string PlayerName { get; set; } = string.Empty;
+
+    private InputText? _inputRef;
+
+    [Inject] private NavigationManager Navigation { get; set; } = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (_inputRef!.Element.HasValue)
+                await _inputRef.Element.Value.FocusAsync();
+        }
+    }
+
+
+    private async Task HandleInvalidSubmit()
+    {
+        await _inputRef!.Element!.Value.FocusAsync();
+    }
+    
+    private void HandleValidSubmit()
+    {
+        Navigation.NavigateTo("/Games");
+    }
+
+}

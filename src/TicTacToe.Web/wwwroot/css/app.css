@@ -29,11 +29,13 @@ a, .btn-link {
 }
 
 .invalid {
-    outline: 1px solid red;
+    outline: 1px solid var(--x-color);
 }
 
 .validation-message {
-    color: red;
+    color: var(--x-color);
+    font-size: 0.875rem;
+    margin-top: 5px;
 }
 
 #blazor-error-ui {
