@@ -1,3 +1,5 @@
+using TicTacToe.Domain.Games.Commands;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,8 +16,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/greetings", () => "Hello World")
-    .WithName("HellWorld");
+app.MapPost("/game/{suggestedName}", async (string suggestedName, CreateGameHandler handler) =>
+    {
+        var command = new CreateGame(Guid.CreateVersion7(), suggestedName);
+        await handler.Handle(command);
+        
+        return Results.Created("/game/{id}", command.Id);
+    })
+    .WithName("CreateGame");
 
 app.Run();
 

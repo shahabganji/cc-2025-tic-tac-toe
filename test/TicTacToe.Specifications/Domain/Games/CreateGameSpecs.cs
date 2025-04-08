@@ -1,6 +1,6 @@
 ﻿using TicTacToe.Domain;
 using TicTacToe.Domain.Games.Commands;
-using TicTacToe.Games.Events;
+using TicTacToe.Domain.Games.Events;
 using TicTacToe.Specifications.Helpers;
 
 namespace TicTacToe.Specifications.Domain.Games;

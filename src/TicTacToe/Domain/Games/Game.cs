@@ -1,11 +1,11 @@
-using TicTacToe.Games.Events;
+using TicTacToe.Domain.Games.Events;
 
 namespace TicTacToe.Domain.Games;
 
-public sealed partial class Game : AggregateRoot
+public sealed class Game : AggregateRoot
 {
     public Guid Id { get; private set; }
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
 
     public static Game Create(Guid commandId, string suggestedName)
     {

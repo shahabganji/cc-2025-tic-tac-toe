@@ -1,5 +1,3 @@
-using TicTacToe.Domain;
-
-namespace TicTacToe.Games.Events;
+namespace TicTacToe.Domain.Games.Events;
 
 public record struct GameCreated(Guid Id, string Name) : IEvent;
