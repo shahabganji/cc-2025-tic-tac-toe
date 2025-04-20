@@ -24,6 +24,18 @@ public sealed class PlaySquareSpecs : CommandHandlerHelper<PlaySquare>
     }
 
     [Fact]
+    public async Task Game_Can_be_played_by_joined_players()
+    {
+        Given(NewGame,
+        new PlayerJoined(_xPlayer),
+        new PlayerJoined(_oPlayer));
+
+        var invalidPlayerId = Guid.NewGuid();
+        await Assert.ThrowsAsync<InvalidOperationException>(() => When(new PlaySquare(GameId, invalidPlayerId, 0)));
+    }
+
+
+    [Fact]
     public async Task xPlayer_Starts_the_game()
     {
         Given(NewGame,
@@ -50,7 +62,10 @@ public sealed class PlaySquareSpecs : CommandHandlerHelper<PlaySquare>
     [Fact]
     public async Task Play_already_filled_square_will_fail()
     {
-        Given(NewGame, new SquarePlayed(_xPlayer, 0));
+        Given(NewGame,
+            new PlayerJoined(_xPlayer),
+            new PlayerJoined(_oPlayer),
+            new SquarePlayed(_xPlayer, 0));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => When(new PlaySquare(GameId, _oPlayer, 0)));
     }

@@ -2,7 +2,7 @@ using TicTacToe.Domain.Games.Events;
 
 namespace TicTacToe.Domain.Games;
 
-public sealed class Game : AggregateRoot
+public sealed partial class Game : AggregateRoot
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;
@@ -35,48 +35,12 @@ public sealed class Game : AggregateRoot
 
         return game;
     }
-
-    public void When(GameCreated gameCreated)
+    
+    public void Join(Guid playerId)
     {
-        Id = gameCreated.Id;
-        Name = gameCreated.Name;
-
-        for (var i = 0; i < _boardCells.Length; i++)
-        {
-            _boardCells[i] = EmptyCell;
-        }
+        Apply(new PlayerJoined(playerId));
     }
-
-    public void When(PlayerJoined joinedPlayer)
-    {
-        if (XPlayer is not null && OPlayer is not null)
-        {
-            throw new InvalidOperationException("Game is full");
-        }
-
-        if (XPlayer is null)
-        {
-            XPlayer = joinedPlayer.PlayerId;
-            CurrentPlayer = XPlayer;
-            return;
-        }
-
-        OPlayer = joinedPlayer.PlayerId;
-    }
-
-    public void When(SquarePlayed playedSquare)
-    {
-        _boardCells[playedSquare.Cell] = playedSquare.PlayerId == XPlayer ? XCell : OCell;
-
-        CurrentPlayer = playedSquare.PlayerId == XPlayer ? OPlayer : XPlayer;
-    }
-
-    public void When(GameFinished finishedGame)
-    {
-        Winner = finishedGame.WinnerId;
-        Loser = finishedGame.LoserId;
-    }
-
+    
     public void Play(Guid playerId, int cell)
     {
         GuardAgainstInvalidPrerequisites(playerId, cell);
@@ -143,10 +107,5 @@ public sealed class Game : AggregateRoot
 
         Apply(new GameFinished(playerId, playerId == XPlayer ? OPlayer.Value : XPlayer.Value));
         return true;
-    }
-
-    public void Join(Guid playerId)
-    {
-        Apply(new PlayerJoined(playerId));
     }
 }
