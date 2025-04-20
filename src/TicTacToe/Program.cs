@@ -1,4 +1,4 @@
-using TicTacToe.Domain.Games.Commands;
+using TicTacToe.Domain.Games.CreateGameFeatures;
 
 var builder = WebApplication.CreateBuilder(args);
 

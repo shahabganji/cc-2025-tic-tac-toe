@@ -21,10 +21,7 @@ public abstract class CommandHandlerHelper<TCommand>
         EventStore.previousEvents.AddRange(events.Select((e,i) => new StoredEvent(aggregateId, i, e)));
     }
 
-    protected void When(TCommand command)
-    {
-        Handler.Handle(command);
-    }
+    protected Task When(TCommand command) => Handler.Handle(command);
 
     protected void Then(params IEvent[] expectedEvents)
     {

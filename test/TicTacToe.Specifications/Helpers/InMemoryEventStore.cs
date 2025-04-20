@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using TicTacToe.Domain;
 
 namespace TicTacToe.Specifications.Helpers;

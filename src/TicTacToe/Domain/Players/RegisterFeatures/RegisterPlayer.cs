@@ -1,4 +1,4 @@
-namespace TicTacToe.Domain.Players.Commands;
+namespace TicTacToe.Domain.Players.RegisterFeatures;
 
 public record struct RegisterPlayer(Guid Id, string Name);
 

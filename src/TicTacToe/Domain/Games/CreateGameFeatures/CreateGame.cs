@@ -1,4 +1,4 @@
-namespace TicTacToe.Domain.Games.Commands;
+namespace TicTacToe.Domain.Games.CreateGameFeatures;
 
 public sealed record CreateGame(Guid Id, string SuggestedName);
 
