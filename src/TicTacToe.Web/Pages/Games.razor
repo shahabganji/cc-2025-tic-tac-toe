@@ -7,6 +7,7 @@
 @using TicTacToe.Web.Helpers
 
 @inject HttpClient Http
+@inject NavigationManager Navigation
 @inject ILocalStorageService LocalStorage
 
 <PageTitle>Games</PageTitle>
@@ -15,9 +16,8 @@
 <div class="row">
     <!-- Left Column: Game Creation Form -->
     <div class="col-md-6">
-        <div class="shadow-sm p-4">
-            <h4 class="mb-3 text-info">Create a New Game</h4>
-
+        <div class="game-card shadow-sm p-4">
+            <h4 class="mb-3">Create a New Game</h4>
             <EditForm Model="this" OnValidSubmit="CreateGame">
                 <DataAnnotationsValidator/>
                 <div class="mb-3">
@@ -32,8 +32,8 @@
 
     <!-- Right Column: Game View -->
     <div class="col-md-6">
-        <div class="shadow-sm p-4 game-container">
-            <h1 class="text-info mb-4">Player: @_currentPlayer</h1>
+        <div class="game-card shadow-sm p-4 game-container">
+            <h4 class="mb-4">Player: @CurrentPlayer?.Name</h4>
 
             <div class="home-layout mb-3">
                 <GameList OnJoin="HandleJoin" AvailableGames="_availableGames"/>
@@ -47,10 +47,13 @@
 
 @if (_currentGame != null)
 {
+    
+    <br />
+    <hr />
+    
     <div class="row">
         <div class="col-12">
             <div class="mb-4">
-                <h3 class="game-title">Playing: @_currentGame.Name</h3>
                 <Board GameName="@_currentGame.Name"/>
             </div>
         </div>
@@ -60,7 +63,7 @@
 
 @code {
 
-    private string _currentPlayer = "something"!;
+    private PlayerInfo? CurrentPlayer { get; set; } = null!;
 
 
     [Required(ErrorMessage = "Please enter game name!")]
@@ -75,7 +78,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _currentPlayer = (await LocalStorage.GetItemAsStringAsync(LocalStorageConstants.PlayerNameStorageKey))!;
+        CurrentPlayer = await LocalStorage.GetItemAsync<PlayerInfo>(LocalStorageConstants.PlayerStorageKey);
+
+        if (CurrentPlayer is null)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 
     private void HandleJoin(GameInfo game)

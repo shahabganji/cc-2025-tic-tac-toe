@@ -1,6 +1,7 @@
 @page "/"
 @using System.ComponentModel.DataAnnotations
 @using Blazored.LocalStorage
+@using TicTacToe.Web.Contracts
 @using TicTacToe.Web.Helpers
 
 <EditForm Model="this" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit"
@@ -37,9 +38,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var playerName = await LocalStorage.GetItemAsStringAsync(LocalStorageConstants.PlayerNameStorageKey);
+        var isPlayerAlreadyRegistered = await LocalStorage.ContainKeyAsync(LocalStorageConstants.PlayerStorageKey);
 
-        if (!string.IsNullOrWhiteSpace(playerName))
+        if (isPlayerAlreadyRegistered)
         {
             Navigation.NavigateTo("/Games");
         }
@@ -68,7 +69,9 @@
 
         if (response.IsSuccessStatusCode)
         {
-            await LocalStorage.SetItemAsync(LocalStorageConstants.PlayerNameStorageKey, PlayerName);
+            var playerId = await response.Content.ReadFromJsonAsync<Guid>();
+            var player = new PlayerInfo(playerId, PlayerName);
+            await LocalStorage.SetItemAsync(LocalStorageConstants.PlayerStorageKey, player);
             Navigation.NavigateTo("/Games");
         }
         else

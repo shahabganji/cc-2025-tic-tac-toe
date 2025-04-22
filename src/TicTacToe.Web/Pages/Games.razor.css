@@ -12,3 +12,40 @@
     color: white;
     margin-bottom: 10px;
 }
+
+/* Base game card styles */
+.game-card {
+    border-radius: 12px;
+    width: 440px;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 20px var(--o-color);
+    border: 1px solid var(--o-color);
+}
+
+/* Dark Theme */
+
+.game-card h4 {
+    color: var(--o-color);
+}
+
+.dark .game-card {
+    background-color: var(--dark-bg);
+}
+
+/* Light Theme */
+
+.light .game-card h4 {
+    color: var(--dark-bg);
+}
+
+.light .game-card {
+    background-color: var(--light-bg);
+    box-shadow: 0 0 20px var(--dark-bg);
+    border: 1px solid var(--dark-bg);
+}
+
