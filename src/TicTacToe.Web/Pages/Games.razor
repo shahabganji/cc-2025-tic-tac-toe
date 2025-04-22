@@ -1,38 +1,104 @@
 ﻿@page "/Games"
+
+@using System.ComponentModel.DataAnnotations
+@using Blazored.LocalStorage
 @using TicTacToe.Web.Components
 @using TicTacToe.Web.Contracts
+@using TicTacToe.Web.Helpers
+
+@inject HttpClient Http
+@inject ILocalStorageService LocalStorage
 
 <PageTitle>Games</PageTitle>
 
 
-<div class="game-container">
-    <h1 style="color: #0dcaf0">Tic Tac Toe</h1>
+<div class="row">
+    <!-- Left Column: Game Creation Form -->
+    <div class="col-md-6">
+        <div class="shadow-sm p-4">
+            <h4 class="mb-3 text-info">Create a New Game</h4>
 
-    <hr/>
-
-
-    <div class="home-layout">
-        @if (_currentGame != null)
-        {
-            <div>
-                <h3 class="game-title">Playing: @_currentGame.Name</h3>
-                <Board GameName="@_currentGame.Name" />
-            </div>
-        }
-
-        <GameList OnJoin="HandleJoin" />
+            <EditForm Model="this" OnValidSubmit="CreateGame">
+                <DataAnnotationsValidator/>
+                <div class="mb-3">
+                    <InputText id="PlayerName" class="form-control" placeholder="Enter a game name..."
+                               @bind-Value="NewGameName"/>
+                    <ValidationMessage For="@(() => NewGameName)" class="text-danger mt-1"/>
+                </div>
+                <button class="btn btn-primary w-100">Create New Game</button>
+            </EditForm>
+        </div>
     </div>
-    
 
-    <hr/>
-    <button class="toggle-theme" onclick="toggleTheme()">Toggle Theme</button>
+    <!-- Right Column: Game View -->
+    <div class="col-md-6">
+        <div class="shadow-sm p-4 game-container">
+            <h1 class="text-info mb-4">Player: @_currentPlayer</h1>
+
+            <div class="home-layout mb-3">
+                <GameList OnJoin="HandleJoin" AvailableGames="_availableGames"/>
+            </div>
+
+            <hr/>
+            <button class="btn btn-outline-secondary" onclick="toggleTheme()">Toggle Theme</button>
+        </div>
+    </div>
 </div>
 
+@if (_currentGame != null)
+{
+    <div class="row">
+        <div class="col-12">
+            <div class="mb-4">
+                <h3 class="game-title">Playing: @_currentGame.Name</h3>
+                <Board GameName="@_currentGame.Name"/>
+            </div>
+        </div>
+    </div>
+}
+
+
 @code {
+
+    private string _currentPlayer = "something"!;
+
+
+    [Required(ErrorMessage = "Please enter game name!")]
+    public string NewGameName { get; set; } = string.Empty;
+
     private GameInfo? _currentGame;
+
+    private readonly List<GameInfo> _availableGames =
+    [
+        new(Guid.CreateVersion7(), "Game #1"),
+    ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentPlayer = (await LocalStorage.GetItemAsStringAsync(LocalStorageConstants.PlayerNameStorageKey))!;
+    }
 
     private void HandleJoin(GameInfo game)
     {
         _currentGame = game;
     }
+
+    private async Task CreateGame()
+    {
+        if (string.IsNullOrWhiteSpace(NewGameName))
+        {
+            return;
+        }
+
+        var response = await Http.PostAsJsonAsync("/game", new { suggestedName = NewGameName });
+
+        if (response.IsSuccessStatusCode)
+        {
+            var gameId = await response.Content.ReadFromJsonAsync<Guid>();
+            _availableGames.Add(new GameInfo(gameId, NewGameName));
+            await InvokeAsync(StateHasChanged);
+            NewGameName = string.Empty;
+        }
+    }
+
 }

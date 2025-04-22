@@ -8,10 +8,15 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.4" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Domain\Shared\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TicTacToe.Web\TicTacToe.Web.csproj" />
     </ItemGroup>
 
 </Project>

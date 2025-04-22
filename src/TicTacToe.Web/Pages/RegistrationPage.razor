@@ -1,15 +1,18 @@
 @page "/"
 @using System.ComponentModel.DataAnnotations
+@using Blazored.LocalStorage
+@using TicTacToe.Web.Helpers
 
-<EditForm Model="this" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
-    <DataAnnotationsValidator />
+<EditForm Model="this" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit"
+          EditContext="_editContext">
+    <DataAnnotationsValidator/>
 
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="card player-card">
             <div class="mb-4">
                 <label for="PlayerName" class="form-label">Enter your name:</label>
-                <InputText id="PlayerName" class="form-control player-input" @bind-Value="PlayerName" @ref="_inputRef" />
-                <ValidationMessage For="@(() => PlayerName)" />
+                <InputText id="PlayerName" class="form-control player-input" @bind-Value="PlayerName" @ref="_inputRef"/>
+                <ValidationMessage For="@(() => PlayerName)"/>
             </div>
 
             <button type="submit" class="btn register-button w-100">Enter Games</button>
@@ -25,6 +28,22 @@
     private InputText? _inputRef;
 
     [Inject] private NavigationManager Navigation { get; set; } = null!;
+    [Inject] private HttpClient Http { get; set; } = null!;
+    [Inject] private ILocalStorageService LocalStorage { get; set; } = null!;
+
+    private readonly EditContext _editContext = null!;
+    private readonly ValidationMessageStore? _messageStore = null!;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var playerName = await LocalStorage.GetItemAsStringAsync(LocalStorageConstants.PlayerNameStorageKey);
+
+        if (!string.IsNullOrWhiteSpace(playerName))
+        {
+            Navigation.NavigateTo("/Games");
+        }
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -35,15 +54,30 @@
         }
     }
 
-
     private async Task HandleInvalidSubmit()
     {
         await _inputRef!.Element!.Value.FocusAsync();
     }
-    
-    private void HandleValidSubmit()
+
+    private async Task HandleValidSubmit()
     {
-        Navigation.NavigateTo("/Games");
+        var response = await Http.PostAsJsonAsync("/player/register", new
+        {
+            Name = PlayerName
+        });
+
+        if (response.IsSuccessStatusCode)
+        {
+            await LocalStorage.SetItemAsync(LocalStorageConstants.PlayerNameStorageKey, PlayerName);
+            Navigation.NavigateTo("/Games");
+        }
+        else
+        {
+            // Add an error message and notify UI
+            _messageStore?.Add(() => PlayerName, "Failed to register. Please try a different name.");
+            _editContext.NotifyValidationStateChanged();
+            await _inputRef!.Element!.Value.FocusAsync();
+        }
     }
 
 }

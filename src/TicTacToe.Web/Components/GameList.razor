@@ -1,23 +1,25 @@
 @using TicTacToe.Web.Contracts
-<div class="game-list">
-    <h4>Active Games</h4>
 
-    @foreach (var game in _availableGames)
+<div class="game-list">
+    @if (AvailableGames is not null)
     {
-        <div class="game-item">
-            <span>@game.Name</span>
-            <button @onclick="() => OnJoin.InvokeAsync(game)">Join</button>
-        </div>
+        <h4>Active Games</h4>
+        @foreach (var game in AvailableGames)
+        {
+            <div class="game-item">
+                <span>@game.Name</span>
+                <button @onclick="() => OnJoin.InvokeAsync(game)">Join</button>
+            </div>
+        }
+    }
+    else
+    {
+        <h4>No active games</h4>
     }
 </div>
 
 @code {
     [Parameter] public EventCallback<GameInfo> OnJoin { get; set; }
 
-    private List<GameInfo> _availableGames =
-    [
-        new(1, "Game #1"),
-        new(2, "Game #2"),
-        new(3, "Game #3")
-    ];
+    [Parameter] public IEnumerable<GameInfo>? AvailableGames { get; set; }
 }
