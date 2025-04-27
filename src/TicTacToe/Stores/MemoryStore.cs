@@ -2,10 +2,10 @@ using TicTacToe.Domain;
 
 namespace TicTacToe.Stores;
 
+internal record StoredEvent(Guid Id, long Version, IEvent Event);
+
 public sealed class InMemoryEventStore : IEventStore
 {
-    private sealed record StoredEvent(Guid Id, long Version, IEvent Event);
-    
     private readonly List<StoredEvent> _previousEvents = [];
     private readonly List<StoredEvent> _newEvents = [];
 
@@ -13,10 +13,9 @@ public sealed class InMemoryEventStore : IEventStore
         => Task.FromResult<IReadOnlyCollection<IEvent>>(
             _previousEvents.Where(e => e.Id == aggregateId).Select(e => e.Event).ToList());
 
-    public Task AppendToStream(Guid aggregateId, long expectedVersion, IReadOnlyCollection<IEvent> events)
+    public void AppendToStream(Guid aggregateId, long expectedVersion, IReadOnlyCollection<IEvent> events)
     {
         _newEvents.AddRange(events.Select(e => new StoredEvent(aggregateId, expectedVersion, e)));
-        return Task.CompletedTask;
     }
 
     public Task SaveStreamAsync()

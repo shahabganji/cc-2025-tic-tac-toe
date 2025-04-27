@@ -13,10 +13,9 @@ public sealed class InMemoryEventStore : IEventStore
         => Task.FromResult<IReadOnlyCollection<IEvent>>(
             previousEvents.Where(e => e.Id == aggregateId).Select(e => e.Event).ToList());
 
-    public Task AppendToStream(Guid aggregateId, long expectedVersion, IReadOnlyCollection<IEvent> events)
+    public void AppendToStream(Guid aggregateId, long expectedVersion, IReadOnlyCollection<IEvent> events)
     {
         newEvents.AddRange(events.Select(e => new StoredEvent(aggregateId, expectedVersion, e)));
-        return Task.CompletedTask;
     }
 
     public Task SaveStreamAsync()

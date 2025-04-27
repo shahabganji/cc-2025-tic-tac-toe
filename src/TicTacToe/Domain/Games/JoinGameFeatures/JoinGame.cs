@@ -18,6 +18,8 @@ public sealed class JoinGameHandler(IEventStore store) : CommandHandler<JoinGame
         
         game.Join(command.PlayerId);
         
-        await _store.AppendToStream(game.Id, _store.Version, game.Changes);
+        _store.AppendToStream(game.Id, _store.Version, game.Changes);
+        
+        await _store.SaveStreamAsync();
     }
 }

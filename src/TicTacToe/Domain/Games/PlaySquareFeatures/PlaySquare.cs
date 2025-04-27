@@ -18,6 +18,8 @@ public sealed class PlaySquareHandler(IEventStore eventStore) : CommandHandler<P
         
         game.Play(command.PlayerId, command.Cell);
         
-        await _store.AppendToStream(game.Id, _store.Version, game.Changes);
+        _store.AppendToStream(game.Id, _store.Version, game.Changes);
+
+        await _store.SaveStreamAsync();
     }
 }
