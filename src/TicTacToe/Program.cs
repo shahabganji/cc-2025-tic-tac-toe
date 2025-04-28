@@ -1,9 +1,11 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.SignalR;
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.CreateGameFeatures;
 using TicTacToe.Domain.Players.RegisterFeatures;
+using TicTacToe.Hubs;
 using TicTacToe.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,8 @@ builder.Services
     .AddCommandHandlers()
     .AddEventStore()
     ;
+
+builder.Services.AddSignalR();
 
 builder.Services.AddAntiforgery();
 builder.Services.AddResponseCompression(options =>
@@ -41,6 +45,8 @@ app.UseStaticFiles();
 
 app.UseAntiforgery();
 
+app.MapHub<TicTacToeHub>("/hubs");
+
 app.MapPost("/player/register", async (RegisterPlayer command, RegisterPlayerHandler handler) =>
 {
     command.Id = Guid.CreateVersion7();
@@ -48,13 +54,15 @@ app.MapPost("/player/register", async (RegisterPlayer command, RegisterPlayerHan
     return Results.Created("/player/{id}", command.Id);
 }).WithName("RegisterPlayer");
 
-app.MapPost("/game", async (CreateGame game, CreateGameHandler handler) =>
+app.MapPost("/game", async (CreateGame game, CreateGameHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
     {
         var gameId = Guid.CreateVersion7();
         var gameName = string.IsNullOrWhiteSpace(game.SuggestedName) ? $"Game: {gameId}" : game.SuggestedName;
 
         var command = new CreateGame(gameId, gameName);
         await handler.Handle(command);
+        
+        await context.Clients.All.GameCreated(gameId, gameName);
 
         return Results.Created("/game/{id}", command.Id);
     })

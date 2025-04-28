@@ -2,6 +2,8 @@
 
 @using System.ComponentModel.DataAnnotations
 @using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
+@using Microsoft.AspNetCore.SignalR.Client
 @using TicTacToe.Web.Components
 @using TicTacToe.Web.Contracts
 @using TicTacToe.Web.Helpers
@@ -9,6 +11,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject ILocalStorageService LocalStorage
+@inject IWebAssemblyHostEnvironment Host
 
 <PageTitle>Games</PageTitle>
 
@@ -47,10 +50,9 @@
 
 @if (_currentGame != null)
 {
-    
-    <br />
-    <hr />
-    
+    <br/>
+    <hr/>
+
     <div class="row">
         <div class="col-12">
             <div class="mb-4">
@@ -63,8 +65,8 @@
 
 @code {
 
-    private PlayerInfo? CurrentPlayer { get; set; } = null!;
-
+    private PlayerInfo? CurrentPlayer { get; set; }
+    private HubConnection HubConnection { get; set; } = null!;
 
     [Required(ErrorMessage = "Please enter game name!")]
     public string NewGameName { get; set; } = string.Empty;
@@ -84,6 +86,21 @@
         {
             Navigation.NavigateTo("/");
         }
+
+        var hubsUri = new Uri($"{Host.BaseAddress}hubs");
+        
+        HubConnection = new HubConnectionBuilder()
+            .WithUrl(hubsUri)
+            .Build();
+
+        HubConnection.On("GameCreated", async (Guid gameId, string gameName) =>
+        {
+            Console.WriteLine("Game created: {0}: {1}", gameId, gameName);
+            _availableGames.Add(new GameInfo(gameId, gameName));
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await HubConnection.StartAsync();
     }
 
     private void HandleJoin(GameInfo game)
@@ -102,11 +119,10 @@
 
         if (response.IsSuccessStatusCode)
         {
-            var gameId = await response.Content.ReadFromJsonAsync<Guid>();
-            _availableGames.Add(new GameInfo(gameId, NewGameName));
-            await InvokeAsync(StateHasChanged);
+            await response.Content.ReadFromJsonAsync<Guid>();
             NewGameName = string.Empty;
         }
     }
 
+    public ValueTask DisposeAsync() => HubConnection.DisposeAsync();
 }
