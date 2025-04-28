@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Text.Json.Serialization;
 using Microsoft.Azure.Cosmos;
 using TicTacToe.Domain;
@@ -9,10 +10,11 @@ internal sealed record CosmosEventStream(string StreamId)
 {
     internal static string GetId(string streamId) => $"EventStream-{streamId}";
 
+    public long Version { get; set; }
+    
     [JsonPropertyName("id")] public string Id => GetId(StreamId);
-    public long Version { get; internal set; }
 
-    [JsonPropertyName("_etag")] public string Etag => Version.ToString();
+    [JsonPropertyName("_etag")] public string Etag { get; set; }
 };
 
 internal sealed record CosmosStoredEvent(Guid StreamId, long Version, DateTimeOffset Timestamp, IEvent Event)
@@ -57,9 +59,10 @@ internal sealed class CosmosEventStore(Container container) : IEventStore
     {
         await InitializeActiveStream(streamId);
 
+        
         var streamIterator =
-            _container.GetItemQueryIterator<StoredEvent>(
-                new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}' AND c.id <> '{streamId}'"));
+            _container.GetItemQueryIterator<CosmosStoredEvent>(
+                new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}' AND c.id <> '{_activeStream.Id}'"));
 
         if (!streamIterator.HasMoreResults)
             return [];
@@ -121,7 +124,11 @@ internal sealed class CosmosEventStore(Container container) : IEventStore
             }
 
             var response = await transactionalBatch.ExecuteAsync(CancellationToken.None);
-            Console.WriteLine(response.IsSuccessStatusCode);
+
+            if (!response.IsSuccessStatusCode && response[0].StatusCode == HttpStatusCode.PreconditionFailed)
+            {
+                throw new InvalidOperationException("Concurrency error");
+            }
         }
     }
 }

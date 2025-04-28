@@ -1,6 +1,7 @@
 ﻿@page "/Games"
 
 @using System.ComponentModel.DataAnnotations
+@using System.Diagnostics.CodeAnalysis
 @using Blazored.LocalStorage
 @using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @using Microsoft.AspNetCore.SignalR.Client
@@ -75,7 +76,7 @@
 
     private readonly List<GameInfo> _availableGames =
     [
-        new(Guid.CreateVersion7(), "Game #1"),
+        new(Guid.Parse("01967de2-2872-7c3b-b401-f39b32fb5d19"), "Live Demo"),
     ];
 
     protected override async Task OnInitializedAsync()
@@ -88,7 +89,7 @@
         }
 
         var hubsUri = new Uri($"{Host.BaseAddress}hubs");
-        
+
         HubConnection = new HubConnectionBuilder()
             .WithUrl(hubsUri)
             .Build();
@@ -103,9 +104,18 @@
         await HubConnection.StartAsync();
     }
 
-    private void HandleJoin(GameInfo game)
+    private async Task HandleJoin(GameInfo game)
     {
-        _currentGame = game;
+        var response = await Http.PostAsJsonAsync("/game/join", new
+        {
+            GameId = game.Id,
+            PlayerId = CurrentPlayer!.Id
+        });
+
+        if (response.IsSuccessStatusCode)
+        {
+            _currentGame = game;
+        }
     }
 
     private async Task CreateGame()

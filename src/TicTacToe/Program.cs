@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.CreateGameFeatures;
+using TicTacToe.Domain.Games.JoinGameFeatures;
 using TicTacToe.Domain.Players.RegisterFeatures;
 using TicTacToe.Hubs;
 using TicTacToe.Stores;
@@ -54,19 +55,30 @@ app.MapPost("/player/register", async (RegisterPlayer command, RegisterPlayerHan
     return Results.Created("/player/{id}", command.Id);
 }).WithName("RegisterPlayer");
 
-app.MapPost("/game", async (CreateGame game, CreateGameHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
-    {
-        var gameId = Guid.CreateVersion7();
-        var gameName = string.IsNullOrWhiteSpace(game.SuggestedName) ? $"Game: {gameId}" : game.SuggestedName;
+app.MapPost("/game",
+        async (CreateGame game, CreateGameHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
+        {
+            var gameId = Guid.CreateVersion7();
+            var gameName = string.IsNullOrWhiteSpace(game.SuggestedName) ? $"Game: {gameId}" : game.SuggestedName;
 
-        var command = new CreateGame(gameId, gameName);
-        await handler.Handle(command);
-        
-        await context.Clients.All.GameCreated(gameId, gameName);
+            var command = new CreateGame(gameId, gameName);
+            await handler.Handle(command);
 
-        return Results.Created("/game/{id}", command.Id);
-    })
+            await context.Clients.All.GameCreated(gameId, gameName);
+
+            return Results.Created("/game/{id}", command.Id);
+        })
     .WithName("CreateGame");
+
+app.MapPost("/game/join",
+        async (JoinGame joinGame, JoinGameHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
+        {
+            await handler.Handle(joinGame);
+
+            return Results.Ok();
+        })
+    .WithName("JoinGame");
+
 
 // if the requested route does not exist, then route it to the index.html file, blazor landing page
 app.MapFallbackToFile("index.html");
