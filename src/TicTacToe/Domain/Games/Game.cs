@@ -38,6 +38,11 @@ public sealed partial class Game : AggregateRoot
     
     public void Join(Guid playerId)
     {
+        if (XPlayer == playerId)
+        {
+            throw new InvalidOperationException("Player is already part of the game");
+        }
+        
         Apply(new PlayerJoined(playerId));
     }
     

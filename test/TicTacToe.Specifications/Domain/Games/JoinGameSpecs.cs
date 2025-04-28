@@ -8,7 +8,7 @@ namespace TicTacToe.Specifications.Domain.Games;
 public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
 {
     private Guid GameId => AggregateId;
-    
+
     private readonly Guid _xPlayer = Guid.NewGuid();
     private readonly Guid _oPlayer = Guid.NewGuid();
 
@@ -23,6 +23,17 @@ public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
 
         Then(new PlayerJoined(_xPlayer));
     }
+
+    [Fact]
+    public async Task One_player_cannot_join_a_game_twice()
+    {
+        Given(new GameCreated(GameId, "My Game"),
+            new PlayerJoined(_xPlayer)
+        );
+
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await When(new JoinGame(GameId, _xPlayer)));
+    }
+
 
     [Fact]
     public async Task Joining_a_game_with_one_player_should_add_the_player_to_the_game()
