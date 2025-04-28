@@ -32,7 +32,7 @@ public sealed partial class Game
         OPlayer = joinedPlayer.PlayerId;
     }
 
-    public void When(SquarePlayed playedSquare)
+    public void When(CellFilled playedSquare)
     {
         _boardCells[playedSquare.Cell] = playedSquare.PlayerId == XPlayer ? XCell : OCell;
 

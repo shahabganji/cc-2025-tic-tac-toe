@@ -53,7 +53,7 @@ public sealed partial class Game : AggregateRoot
         var cellValue = playerId == XPlayer ? XCell : OCell;
         _boardCells[cell] = cellValue;
 
-        Apply(new SquarePlayed(playerId, cell));
+        Apply(new CellFilled(playerId, cell));
 
         if (WinnerDetected(playerId))
             return;
