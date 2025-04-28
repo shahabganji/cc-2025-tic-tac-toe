@@ -1,10 +1,10 @@
 using System.Net.Mime;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.CreateGameFeatures;
 using TicTacToe.Domain.Games.JoinGameFeatures;
+using TicTacToe.Domain.Games.LoadGamesFeature;
 using TicTacToe.Domain.Players.RegisterFeatures;
 using TicTacToe.Hubs;
 using TicTacToe.Stores;
@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddCommandHandlers()
+    .AddQueryHandlers()
     .AddCosmosEventStore(builder.Configuration.GetConnectionString("Cosmos")!)
     ;
 
@@ -69,6 +70,17 @@ app.MapPost("/game",
             return Results.Created("/game/{id}", command.Id);
         })
     .WithName("CreateGame");
+
+
+app.MapGet("/games/available",
+        async (ShowListOfGamesHandler handler) =>
+        {
+            var result = await handler.Query(new ShowListOfGames());
+
+            return Results.Ok(result);
+        })
+    .WithName("ShowAvailableGames");
+
 
 app.MapPost("/game/join",
         async (JoinGame joinGame, JoinGameHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>

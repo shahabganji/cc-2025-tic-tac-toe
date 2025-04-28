@@ -74,12 +74,28 @@
 
     private GameInfo? _currentGame;
 
-    private readonly List<GameInfo> _availableGames =
-    [
-        new(Guid.Parse("01967de2-2872-7c3b-b401-f39b32fb5d19"), "Live Demo"),
-    ];
+    private List<GameInfo> _availableGames = [];
 
     protected override async Task OnInitializedAsync()
+    {
+        await InitializeCurrentPlayer();
+
+        await LoadAvailableGames();
+
+        await SetupHubsConnection();
+    }
+
+    private async Task LoadAvailableGames()
+    {
+        var response = await Http.GetFromJsonAsync<IEnumerable<GameInfo>>("/games/available");
+
+        if (response is not null)
+        {
+            _availableGames = response.ToList();
+        }
+    }
+
+    private async Task InitializeCurrentPlayer()
     {
         CurrentPlayer = await LocalStorage.GetItemAsync<PlayerInfo>(LocalStorageConstants.PlayerStorageKey);
 
@@ -87,7 +103,10 @@
         {
             Navigation.NavigateTo("/");
         }
+    }
 
+    private async Task SetupHubsConnection()
+    {
         var hubsUri = new Uri($"{Host.BaseAddress}hubs");
 
         HubConnection = new HubConnectionBuilder()

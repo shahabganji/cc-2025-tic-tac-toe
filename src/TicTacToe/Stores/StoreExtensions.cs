@@ -16,17 +16,15 @@ internal static class StoreExtensions
 
     public static void AddCosmosEventStore(this IServiceCollection services, string connectionString)
     {
-        services.AddScoped<IEventStore>(_ =>
+        var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions
         {
-            var cosmosClient = new CosmosClient(connectionString, new CosmosClientOptions
-            {
-                Serializer = new CosmosDb.Serializer.CosmosSystemTextJsonSerializer(),
-            });
-
-            var database = cosmosClient.GetDatabase("CodeCrafts2025");
-            var container = database.GetContainer("XOEvents");
-
-            return new CosmosEventStore(container);
+            Serializer = new CosmosDb.Serializer.CosmosSystemTextJsonSerializer(),
         });
+
+        var database = cosmosClient.GetDatabase("CodeCrafts2025");
+        var container = database.GetContainer("XOEvents");
+
+        services.AddScoped<IEventStore>(_ => new CosmosEventStore(container));
+        services.AddScoped<IQueryStore>(_ => new CosmosEventStore(container));
     }
 }

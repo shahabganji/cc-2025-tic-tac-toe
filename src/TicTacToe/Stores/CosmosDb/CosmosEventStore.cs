@@ -1,32 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Text.Json.Serialization;
 using Microsoft.Azure.Cosmos;
 using TicTacToe.Domain;
 
 namespace TicTacToe.Stores.CosmosDb;
 
-internal sealed record CosmosEventStream(string StreamId)
-{
-    internal static string GetId(string streamId) => $"EventStream-{streamId}";
-
-    public long Version { get; set; }
-    
-    [JsonPropertyName("id")] public string Id => GetId(StreamId);
-
-    [JsonPropertyName("_etag")] public string Etag { get; set; }
-};
-
-internal sealed record CosmosStoredEvent(Guid StreamId, long Version, DateTimeOffset Timestamp, IEvent Event)
-    : StoredEvent(StreamId, Version, Event)
-{
-    [JsonPropertyName("id")] public string Id => Timestamp.ToUnixTimeMilliseconds().ToString();
-    [JsonPropertyName("_ts")] public string Ts => Timestamp.ToString();
-    [JsonPropertyName("pk")] public string Pk => StreamId.ToString();
-    [JsonPropertyName("type")] public string Type => Event.GetType().Name;
-}
-
-internal sealed class CosmosEventStore(Container container) : IEventStore
+internal sealed partial class CosmosEventStore(Container container) : IEventStore
 {
     private readonly Container _container = container;
 
@@ -59,10 +38,11 @@ internal sealed class CosmosEventStore(Container container) : IEventStore
     {
         await InitializeActiveStream(streamId);
 
-        
+
         var streamIterator =
             _container.GetItemQueryIterator<CosmosStoredEvent>(
-                new QueryDefinition($"SELECT * FROM c WHERE c.StreamId = '{streamId}' AND c.id <> '{_activeStream.Id}'"));
+                new QueryDefinition(
+                    $"SELECT * FROM c WHERE c.StreamId = '{streamId}' AND c.id <> '{_activeStream.Id}'"));
 
         if (!streamIterator.HasMoreResults)
             return [];
@@ -100,7 +80,7 @@ internal sealed class CosmosEventStore(Container container) : IEventStore
         }
     }
 
-    public async Task SaveStreamAsync()
+    public async Task SaveStreamAsync(CancellationToken ct = default)
     {
         if (_activeStream is null)
         {
@@ -123,7 +103,7 @@ internal sealed class CosmosEventStore(Container container) : IEventStore
                 transactionalBatch.UpsertItem(storedEvent);
             }
 
-            var response = await transactionalBatch.ExecuteAsync(CancellationToken.None);
+            var response = await transactionalBatch.ExecuteAsync(ct);
 
             if (!response.IsSuccessStatusCode && response[0].StatusCode == HttpStatusCode.PreconditionFailed)
             {

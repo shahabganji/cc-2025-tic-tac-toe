@@ -18,8 +18,5 @@ public sealed class InMemoryEventStore : IEventStore
         _newEvents.AddRange(events.Select(e => new StoredEvent(aggregateId, Version, e)));
     }
 
-    public Task SaveStreamAsync()
-    {
-        return Task.CompletedTask;
-    }
+    public Task SaveStreamAsync(CancellationToken ct = default) => Task.CompletedTask;
 }

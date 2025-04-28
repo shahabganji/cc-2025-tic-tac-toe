@@ -2,7 +2,6 @@ namespace TicTacToe.Domain;
 
 public sealed class EventStream<T>(Guid streamId, IEventStore store) where T : AggregateRoot, new()
 {
-
     public long Version => store.Version;
     public async Task<T?> Get()
     {
