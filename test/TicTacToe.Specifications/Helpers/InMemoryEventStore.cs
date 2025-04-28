@@ -6,16 +6,18 @@ internal sealed record StoredEvent(Guid Id, long Version, IEvent Event);
 
 public sealed class InMemoryEventStore : IEventStore
 {
-    internal List<StoredEvent> previousEvents = [];
-    internal List<StoredEvent> newEvents = [];
+    internal readonly List<StoredEvent> PreviousEvents = [];
+    internal readonly List<StoredEvent> NewEvents = [];
+
+    public long Version => NewEvents.Count + PreviousEvents.Count;
 
     public Task<IReadOnlyCollection<IEvent>> LoadStreamEvents(Guid aggregateId, CancellationToken ct = default)
         => Task.FromResult<IReadOnlyCollection<IEvent>>(
-            previousEvents.Where(e => e.Id == aggregateId).Select(e => e.Event).ToList());
+            PreviousEvents.Where(e => e.Id == aggregateId).Select(e => e.Event).ToList());
 
     public void AppendToStream(Guid aggregateId, long expectedVersion, IReadOnlyCollection<IEvent> events)
     {
-        newEvents.AddRange(events.Select(e => new StoredEvent(aggregateId, expectedVersion, e)));
+        NewEvents.AddRange(events.Select(e => new StoredEvent(aggregateId, expectedVersion, e)));
     }
 
     public Task SaveStreamAsync()

@@ -18,7 +18,7 @@ public abstract class CommandHandlerHelper<TCommand>
 
     protected void Given(Guid aggregateId, params IEvent[] events)
     {
-        EventStore.previousEvents.AddRange(events.Select((e,i) => new StoredEvent(aggregateId, i, e)));
+        EventStore.PreviousEvents.AddRange(events.Select((e,i) => new StoredEvent(aggregateId, i, e)));
     }
 
     protected Task When(TCommand command) => Handler.Handle(command);
@@ -30,7 +30,7 @@ public abstract class CommandHandlerHelper<TCommand>
 
     protected void Then(Guid aggregateId, params IEvent[] expectedEvents)
     {
-        var actualEvents = EventStore.newEvents
+        var actualEvents = EventStore.NewEvents
             .Where(e => e.Id == aggregateId)
             .OrderBy(e => e.Version)
             .Select(e => e.Event)

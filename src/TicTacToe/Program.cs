@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddCommandHandlers()
-    .AddEventStore()
+    .AddCosmosEventStore(builder.Configuration.GetConnectionString("Cosmos")!)
     ;
 
 builder.Services.AddSignalR();

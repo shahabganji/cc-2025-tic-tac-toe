@@ -1,13 +1,13 @@
 using TicTacToe.Domain;
 
-namespace TicTacToe.Stores;
-
-internal record StoredEvent(Guid Id, long Version, IEvent Event);
+namespace TicTacToe.Stores.InMemory;
 
 public sealed class InMemoryEventStore : IEventStore
 {
     private readonly List<StoredEvent> _previousEvents = [];
     private readonly List<StoredEvent> _newEvents = [];
+
+    public long Version => _newEvents.Count + _previousEvents.Count;
 
     public Task<IReadOnlyCollection<IEvent>> LoadStreamEvents(Guid aggregateId, CancellationToken ct = default)
         => Task.FromResult<IReadOnlyCollection<IEvent>>(
