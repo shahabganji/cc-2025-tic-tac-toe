@@ -89,7 +89,7 @@ public sealed partial class Game : AggregateRoot
         var gameFinished = _boardCells.All(boardCell => boardCell != EmptyCell);
         if (gameFinished)
         {
-            Apply(new GameFinished(null, null));
+            Apply(new GameFinished(Id, null, null));
         }
     }
 
@@ -110,7 +110,7 @@ public sealed partial class Game : AggregateRoot
             return false;
         }
 
-        Apply(new GameFinished(playerId, playerId == XPlayer ? OPlayer.Value : XPlayer.Value));
+        Apply(new GameFinished(Id, playerId, playerId == XPlayer ? OPlayer.Value : XPlayer.Value));
         return true;
     }
 }

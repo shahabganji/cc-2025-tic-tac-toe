@@ -117,7 +117,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _xPlayer, 2));
 
-        Then(new CellFilled(_xPlayer, 2), new GameFinished(_xPlayer, _oPlayer));
+        Then(new CellFilled(_xPlayer, 2), new GameFinished(GameId, _xPlayer, _oPlayer));
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _xPlayer, 5));
 
-        Then(new CellFilled(_xPlayer, 5), new GameFinished(_xPlayer, _oPlayer));
+        Then(new CellFilled(_xPlayer, 5), new GameFinished(GameId, _xPlayer, _oPlayer));
     }
 
     [Fact]
@@ -151,7 +151,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _xPlayer, 8));
 
-        Then(new CellFilled(_xPlayer, 8), new GameFinished(_xPlayer, _oPlayer));
+        Then(new CellFilled(_xPlayer, 8), new GameFinished(GameId, _xPlayer, _oPlayer));
     }
 
 
@@ -170,7 +170,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _oPlayer, 6));
 
-        Then(new CellFilled(_oPlayer, 6), new GameFinished(_oPlayer, _xPlayer));
+        Then(new CellFilled(_oPlayer, 6), new GameFinished(GameId, _oPlayer, _xPlayer));
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _oPlayer, 1));
 
-        Then(new CellFilled(_oPlayer, 1), new GameFinished(_oPlayer, _xPlayer));
+        Then(new CellFilled(_oPlayer, 1), new GameFinished(GameId, _oPlayer, _xPlayer));
     }
 
     [Fact]
@@ -206,7 +206,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _oPlayer, 8));
 
-        Then(new CellFilled(_oPlayer, 8), new GameFinished(_oPlayer, _xPlayer));
+        Then(new CellFilled(_oPlayer, 8), new GameFinished(GameId, _oPlayer, _xPlayer));
     }
 
     [Fact]
@@ -223,7 +223,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _xPlayer, 8));
 
-        Then(new CellFilled(_xPlayer, 8), new GameFinished(_xPlayer, _oPlayer));
+        Then(new CellFilled(_xPlayer, 8), new GameFinished(GameId, _xPlayer, _oPlayer));
     }
 
 
@@ -242,7 +242,7 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 
         await When(new FillCell(GameId, _oPlayer, 4));
 
-        Then(new CellFilled(_oPlayer, 4), new GameFinished(_oPlayer, _xPlayer));
+        Then(new CellFilled(_oPlayer, 4), new GameFinished(GameId, _oPlayer, _xPlayer));
     }
 
 
@@ -263,6 +263,6 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
         );
 
         await When(new FillCell(GameId, _xPlayer, 8));
-        Then(new CellFilled(_xPlayer, 8), new GameFinished(null, null));
+        Then(new CellFilled(_xPlayer, 8), new GameFinished(GameId, null, null));
     }
 }
