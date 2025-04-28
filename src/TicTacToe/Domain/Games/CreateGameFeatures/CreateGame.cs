@@ -14,7 +14,7 @@ public sealed class CreateGameHandler(IEventStore store) : CommandHandler<Create
         if (game is null)
         {
             game = Game.Create(command.Id, command.SuggestedName);
-            _store.AppendToStream(game.Id, 0, game.Changes);
+            _store.AppendToStream(game.Id,game.Changes);
             await _store.SaveStreamAsync();
         }
     }

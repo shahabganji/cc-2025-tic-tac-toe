@@ -18,7 +18,7 @@ public sealed class FillCellHandler(IEventStore eventStore) : CommandHandler<Fil
         
         game.Play(command.PlayerId, command.Cell);
         
-        _store.AppendToStream(game.Id, _store.Version, game.Changes);
+        _store.AppendToStream(game.Id, game.Changes);
 
         await _store.SaveStreamAsync();
     }

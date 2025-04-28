@@ -10,7 +10,8 @@ public sealed class RegisterPlayerHandler(IEventStore store) : CommandHandler<Re
         var gameStream = GetStream<Player>(command.Id);
         
         var player = Player.Create(command.Id, command.Name);
-        _store.AppendToStream(player.Id, 0, player.Changes);
+        
+        _store.AppendToStream(player.Id, player.Changes);
         
         await _store.SaveStreamAsync();
     }

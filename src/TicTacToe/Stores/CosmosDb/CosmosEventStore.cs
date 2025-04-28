@@ -36,7 +36,7 @@ internal sealed class CosmosEventStore(Container container) : IEventStore
     public long Version => _activeStream?.Version ?? 0;
 
 
-    public void AppendToStream(Guid aggregateId, long expectedVersion, IReadOnlyCollection<IEvent> events)
+    public void AppendToStream(Guid aggregateId, IReadOnlyCollection<IEvent> events)
     {
         _activeStream ??= new CosmosEventStream(aggregateId.ToString());
 
