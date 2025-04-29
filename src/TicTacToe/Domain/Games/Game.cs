@@ -40,7 +40,12 @@ public sealed partial class Game : AggregateRoot
     {
         if (XPlayer == playerId)
         {
-            throw new InvalidOperationException("Player is already part of the game");
+            return;
+        }
+
+        if (OPlayer == playerId)
+        {
+            return;
         }
         
         Apply(new PlayerJoined(playerId));

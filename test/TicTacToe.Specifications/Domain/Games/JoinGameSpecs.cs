@@ -11,6 +11,7 @@ public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
 
     private readonly Guid _xPlayer = Guid.NewGuid();
     private readonly Guid _oPlayer = Guid.NewGuid();
+    private readonly Guid _thirdPlayer = Guid.NewGuid();
 
     protected override CommandHandler<JoinGame> Handler => new JoinGameHandler(EventStore);
 
@@ -25,13 +26,28 @@ public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
     }
 
     [Fact]
-    public async Task One_player_cannot_join_a_game_twice()
+    public async Task xPlayer_joining_the_game_should_be_idempotent()
     {
         Given(new GameCreated(GameId, "My Game"),
             new PlayerJoined(_xPlayer)
         );
 
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await When(new JoinGame(GameId, _xPlayer)));
+        await When(new JoinGame(GameId, _xPlayer));
+        
+        Then();
+    }
+    
+    [Fact]
+    public async Task oPlayer_joining_the_game_should_be_idempotent()
+    {
+        Given(new GameCreated(GameId, "My Game"),
+            new PlayerJoined(_xPlayer),
+            new PlayerJoined(_oPlayer)
+        );
+
+        await When(new JoinGame(GameId, _oPlayer));
+        
+        Then();
     }
 
 
@@ -55,6 +71,6 @@ public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
             new PlayerJoined(_xPlayer),
             new PlayerJoined(_oPlayer));
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => When(new JoinGame(GameId, _oPlayer)));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => When(new JoinGame(GameId, _thirdPlayer)));
     }
 }
