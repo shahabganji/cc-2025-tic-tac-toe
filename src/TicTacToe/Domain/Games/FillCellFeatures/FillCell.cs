@@ -1,4 +1,4 @@
-namespace TicTacToe.Domain.Games.PlaySquareFeatures;
+namespace TicTacToe.Domain.Games.FillCellFeatures;
 
 public record struct FillCell(Guid GameId, Guid PlayerId, int Cell);
 

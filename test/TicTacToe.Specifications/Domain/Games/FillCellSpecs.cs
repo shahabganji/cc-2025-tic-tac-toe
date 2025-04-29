@@ -1,6 +1,6 @@
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.Events;
-using TicTacToe.Domain.Games.PlaySquareFeatures;
+using TicTacToe.Domain.Games.FillCellFeatures;
 using TicTacToe.Specifications.Helpers;
 
 namespace TicTacToe.Specifications.Domain.Games;
