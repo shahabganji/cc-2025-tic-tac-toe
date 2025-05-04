@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using TicTacToe;
@@ -19,6 +20,8 @@ builder.Services
     ;
 
 builder.Services.AddSignalR();
+
+builder.Services.AddOutputCache();
 
 builder.Services.AddAntiforgery();
 builder.Services.AddResponseCompression(options =>
@@ -45,6 +48,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler();
+
+app.UseOutputCache();
+
 
 app.UseHttpsRedirection();
 
@@ -85,17 +91,19 @@ app.MapGet("/games/available",
 
             return Results.Ok(result);
         })
+    .CacheOutput(policyBuilder => policyBuilder.Expire(TimeSpan.FromSeconds(5)))
     .WithName("ShowAvailableGames");
 
 
 app.MapPost("/game/{gameId:guid}/play/cell",
-        async (Guid gameId, FillCell cell, FillCellHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
+        async (Guid gameId, FillCell cell, FillCellHandler handler,
+            IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
         {
             if (gameId != cell.GameId)
             {
                 throw new InvalidOperationException("The game id in the path does not match the game id in the body");
             }
-            
+
             await handler.Handle(cell);
             await context.Clients.Groups(cell.GameId.ToString()).CellFilled(cell.GameId, cell.PlayerId, cell.Cell);
 
