@@ -79,9 +79,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await InitializeCurrentPlayer();
+        InitializeCurrentPlayer();
 
-        await LoadAvailableGames();
+        LoadAvailableGames();
 
         await GameHub.SetupConnection();
 
@@ -111,6 +111,7 @@
         if (response is not null)
         {
             _availableGames = response.ToList();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
