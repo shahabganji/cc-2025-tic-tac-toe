@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
+using TicTacToe;
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.CreateGameFeatures;
 using TicTacToe.Domain.Games.FillCellFeatures;
@@ -29,6 +30,9 @@ builder.Services.AddResponseCompression(options =>
     ]);
 });
 
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<TicTacToeGlobalExceptionHandler>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -39,6 +43,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseWebAssemblyDebugging();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

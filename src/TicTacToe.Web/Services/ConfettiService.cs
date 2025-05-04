@@ -1,6 +1,6 @@
 using Microsoft.JSInterop;
 
-namespace TicTacToe.Web.Components;
+namespace TicTacToe.Web.Services;
 
 internal sealed class ConfettiService(IJSRuntime Js)
 {

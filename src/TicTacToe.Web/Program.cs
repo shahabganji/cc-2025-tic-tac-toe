@@ -4,7 +4,6 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using TicTacToe.Web;
-using TicTacToe.Web.Components;
 using TicTacToe.Web.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -12,7 +11,11 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddTransient<HttpClientInterceptorService>();
+builder.Services.AddHttpClient("App", client => { client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress); })
+    .AddHttpMessageHandler<HttpClientInterceptorService>();
+
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("App"));
 
 builder.Services.AddSingleton<GameHubService>();
 builder.Services.AddSingleton<ConfettiService>();
