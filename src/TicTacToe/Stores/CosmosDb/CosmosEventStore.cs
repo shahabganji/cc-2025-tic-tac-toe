@@ -88,26 +88,26 @@ internal sealed partial class CosmosEventStore(Container container) : IEventStor
         }
 
         var streamId = _activeStream.StreamId;
-        var transactionalBatch = _container.CreateTransactionalBatch(new PartitionKey(streamId));
-
-        transactionalBatch.UpsertItem(_activeStream, new TransactionalBatchItemRequestOptions
-        {
-            IfMatchEtag = _activeStream.Etag,
-            EnableContentResponseOnWrite = false
-        });
 
         foreach (var (_, events) in _events)
         {
+            var transactionalBatch = _container.CreateTransactionalBatch(new PartitionKey(streamId));
+
+            transactionalBatch.UpsertItem(_activeStream, new TransactionalBatchItemRequestOptions
+            {
+                IfMatchEtag = _activeStream.Etag,
+                EnableContentResponseOnWrite = false
+            });
+
             foreach (var storedEvent in events)
             {
                 transactionalBatch.UpsertItem(storedEvent);
-            }
+                var response = await transactionalBatch.ExecuteAsync(ct);
 
-            var response = await transactionalBatch.ExecuteAsync(ct);
-
-            if (!response.IsSuccessStatusCode && response[0].StatusCode == HttpStatusCode.PreconditionFailed)
-            {
-                throw new InvalidOperationException("Concurrency error");
+                if (!response.IsSuccessStatusCode && response[0].StatusCode == HttpStatusCode.PreconditionFailed)
+                {
+                    throw new InvalidOperationException("Concurrency error");
+                }
             }
         }
     }
