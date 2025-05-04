@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
-using TicTacToe.Web.Contracts;
 
 namespace TicTacToe.Web.Services;
 
 internal sealed class GameHubService(IWebAssemblyHostEnvironment host)
 {
     private HubConnection HubConnection { get; set; } = null!;
-
 
     private Func<Guid, string, Task>? _onGameCreated;
     public void OnGameCreated(Func<Guid, string, Task> handler) => _onGameCreated = handler;
@@ -30,8 +28,6 @@ internal sealed class GameHubService(IWebAssemblyHostEnvironment host)
 
         HubConnection.On("GameCreated", async (Guid gameId, string gameName) =>
         {
-            Console.WriteLine("Game created: {0}: {1}", gameId, gameName);
-
             if (_onGameCreated is not null)
             {
                 await _onGameCreated.Invoke(gameId, gameName);
