@@ -81,7 +81,7 @@ app.MapPost("/game",
 app.MapGet("/games/available",
         async (ShowListOfGamesHandler handler) =>
         {
-            var result = await handler.Query(new ShowListOfGames());
+            var result = await handler.Query(new ShowListOfAvailableGames());
 
             return Results.Ok(result);
         })

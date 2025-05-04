@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using TicTacToe.Domain.Games.Events;
+using TicTacToe.Domain.Games.LoadGamesFeature;
 using TicTacToe.Domain.Players.Events;
 
 namespace TicTacToe.Domain;

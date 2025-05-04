@@ -87,7 +87,7 @@
 
         GameHub.OnGameCreated(async (gameId, gameName) =>
         {
-            _availableGames.Add(new GameInfo(gameId, gameName, false));
+            _availableGames.Add(new GameInfo(gameId, gameName));
             await InvokeAsync(StateHasChanged);
         });
 

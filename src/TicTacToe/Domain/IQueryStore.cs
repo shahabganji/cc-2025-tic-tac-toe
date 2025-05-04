@@ -1,8 +1,8 @@
-using TicTacToe.Web.Contracts;
+using TicTacToe.Domain.Games.LoadGamesFeature;
 
 namespace TicTacToe.Domain;
 
 public interface IQueryStore
 {
-    Task<IEnumerable<GameInfo>> GetAvailableGames();
+    Task<ListOfAvailableGames> GetAvailableGames();
 }

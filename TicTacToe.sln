@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "src\TicTacToe\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Specifications", "test\TicTacToe.Specifications\TicTacToe.Specifications.csproj", "{95DDFB2A-732F-479B-961B-4BB90ADF3FD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.GameListAsyncProjection", "src\TicTacToe.GameListAsyncProjection\TicTacToe.GameListAsyncProjection.csproj", "{9125213A-EEC7-4B73-9E13-2C8921430D9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,10 +30,15 @@ Global
 		{95DDFB2A-732F-479B-961B-4BB90ADF3FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95DDFB2A-732F-479B-961B-4BB90ADF3FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95DDFB2A-732F-479B-961B-4BB90ADF3FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9125213A-EEC7-4B73-9E13-2C8921430D9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9125213A-EEC7-4B73-9E13-2C8921430D9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9125213A-EEC7-4B73-9E13-2C8921430D9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9125213A-EEC7-4B73-9E13-2C8921430D9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3C0A0CB9-C0BF-E092-2736-303A3C073A75} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{309B8B18-B9EC-4810-BBD2-F082F79855B7} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{95DDFB2A-732F-479B-961B-4BB90ADF3FD1} = {0C88DD14-F956-CE84-757C-A364CCF449FC}
+		{9125213A-EEC7-4B73-9E13-2C8921430D9D} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
