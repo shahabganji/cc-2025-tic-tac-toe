@@ -36,19 +36,21 @@ public sealed partial class Game : AggregateRoot
         return game;
     }
     
-    public void Join(Guid playerId)
+    public string Join(Guid playerId)
     {
         if (XPlayer == playerId)
         {
-            return;
+            return "X";
         }
 
         if (OPlayer == playerId)
         {
-            return;
+            return "O";
         }
         
         Apply(new PlayerJoined(playerId));
+        
+        return XPlayer == playerId ? "X" : "O";
     }
     
     public void Play(Guid playerId, int cell)

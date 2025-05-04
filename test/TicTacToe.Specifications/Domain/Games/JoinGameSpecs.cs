@@ -5,7 +5,7 @@ using TicTacToe.Specifications.Helpers;
 
 namespace TicTacToe.Specifications.Domain.Games;
 
-public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
+public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame, string>
 {
     private Guid GameId => AggregateId;
 
@@ -13,16 +13,18 @@ public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
     private readonly Guid _oPlayer = Guid.NewGuid();
     private readonly Guid _thirdPlayer = Guid.NewGuid();
 
-    protected override CommandHandler<JoinGame> Handler => new JoinGameHandler(EventStore);
+    protected override CommandHandler<JoinGame, string> Handler => new JoinGameHandler(EventStore);
 
     [Fact]
     public async Task Joining_an_empty_game_should_add_the_player_to_the_game()
     {
         Given(new GameCreated(GameId, "My Game"));
 
-        await When(new JoinGame(GameId, _xPlayer));
+        var playerType = await When(new JoinGame(GameId, _xPlayer));
 
         Then(new PlayerJoined(_xPlayer));
+        
+        Assert.Equal("X", playerType);
     }
 
     [Fact]
@@ -58,9 +60,12 @@ public sealed class JoinGameSpecifications : CommandHandlerHelper<JoinGame>
             new GameCreated(GameId, "My Game"),
             new PlayerJoined(_xPlayer));
 
-        await When(new JoinGame(GameId, _oPlayer));
+        var playerType =  await When(new JoinGame(GameId, _oPlayer));
 
         Then(new PlayerJoined(_oPlayer));
+        
+        Assert.Equal("O", playerType);
+
     }
 
     [Fact]

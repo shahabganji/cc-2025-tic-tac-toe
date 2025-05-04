@@ -32,7 +32,7 @@ body.light .ttt-board {
     border: 2px solid var(--x-color);
     box-shadow: 0 0 12px var(--x-color);
     position: relative;
-    animation: shake 0.5s ease-in-out infinite alternate;
+    animation: shake 0.5s ease-in-out 10s;
 }
 
 @keyframes shake {

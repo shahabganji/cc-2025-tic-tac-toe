@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.SignalR;
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.CreateGameFeatures;
-using TicTacToe.Domain.Games.JoinGameFeatures;
+using TicTacToe.Domain.Games.FillCellFeatures;
 using TicTacToe.Domain.Games.LoadGamesFeature;
 using TicTacToe.Domain.Players.RegisterFeatures;
 using TicTacToe.Hubs;
@@ -82,14 +82,20 @@ app.MapGet("/games/available",
     .WithName("ShowAvailableGames");
 
 
-app.MapPost("/game/join",
-        async (JoinGame joinGame, JoinGameHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
+app.MapPost("/game/{gameId:guid}/play/cell",
+        async (Guid gameId, FillCell cell, FillCellHandler handler, IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
         {
-            await handler.Handle(joinGame);
+            if (gameId != cell.GameId)
+            {
+                throw new InvalidOperationException("The game id in the path does not match the game id in the body");
+            }
+            
+            await handler.Handle(cell);
+            await context.Clients.Groups(cell.GameId.ToString()).CellFilled(cell.GameId, cell.PlayerId, cell.Cell);
 
             return Results.Ok();
         })
-    .WithName("JoinGame");
+    .WithName("FillCell");
 
 
 // if the requested route does not exist, then route it to the index.html file, blazor landing page

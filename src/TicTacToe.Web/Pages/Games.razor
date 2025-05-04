@@ -1,18 +1,17 @@
 ﻿@page "/Games"
 
 @using System.ComponentModel.DataAnnotations
-@using System.Diagnostics.CodeAnalysis
 @using Blazored.LocalStorage
-@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
 @using Microsoft.AspNetCore.SignalR.Client
 @using TicTacToe.Web.Components
 @using TicTacToe.Web.Contracts
 @using TicTacToe.Web.Helpers
+@using TicTacToe.Web.Services
 
 @inject HttpClient Http
+@inject GameHubService GameHub
 @inject NavigationManager Navigation
 @inject ILocalStorageService LocalStorage
-@inject IWebAssemblyHostEnvironment Host
 
 <PageTitle>Games</PageTitle>
 
@@ -37,10 +36,10 @@
     <!-- Right Column: Game View -->
     <div class="col-md-6">
         <div class="game-card shadow-sm p-4 game-container">
-            <h4 class="mb-4">Player: @CurrentPlayer?.Name</h4>
+            <h4 class="mb-4">Player: @_currentPlayer?.Name</h4>
 
             <div class="home-layout mb-3">
-                <GameList OnJoin="HandleJoin" AvailableGames="_availableGames"/>
+                <GameList OnJoin="JoinClickHandler" AvailableGames="_availableGames"/>
             </div>
 
             <hr/>
@@ -57,7 +56,8 @@
     <div class="row">
         <div class="col-12">
             <div class="mb-4">
-                <Board GameName="@_currentGame.Name"/>
+                <Board Game="@_currentGame" Player="_currentPlayer" PlayerType="_playerType" />
+                @* OnGameOver="() => _currentGame = null" *@
             </div>
         </div>
     </div>
@@ -66,13 +66,13 @@
 
 @code {
 
-    private PlayerInfo? CurrentPlayer { get; set; }
-    private HubConnection HubConnection { get; set; } = null!;
 
     [Required(ErrorMessage = "Please enter game name!")]
     public string NewGameName { get; set; } = string.Empty;
 
     private GameInfo? _currentGame;
+    private PlayerInfo? _currentPlayer;
+    private PlayerTypes _playerType;
 
     private List<GameInfo> _availableGames = [];
 
@@ -82,7 +82,25 @@
 
         await LoadAvailableGames();
 
-        await SetupHubsConnection();
+        await GameHub.SetupConnection();
+
+        GameHub.OnGameCreated(async (gameId, gameName) =>
+        {
+            _availableGames.Add(new GameInfo(gameId, gameName, false));
+            await InvokeAsync(StateHasChanged);
+        });
+
+        GameHub.OnPlayerJoined(async (gameId, playerId, playerType) =>
+        {
+            Console.WriteLine(playerType);
+            Console.WriteLine(playerType == "X");
+            if (playerId == _currentPlayer!.Id)
+            {
+                _currentGame = _availableGames.SingleOrDefault(g => g.Id == gameId);
+                _playerType = playerType == "X" ? PlayerTypes.X : PlayerTypes.O;
+                await InvokeAsync(StateHasChanged);
+            }
+        });
     }
 
     private async Task LoadAvailableGames()
@@ -97,44 +115,18 @@
 
     private async Task InitializeCurrentPlayer()
     {
-        CurrentPlayer = await LocalStorage.GetItemAsync<PlayerInfo>(LocalStorageConstants.PlayerStorageKey);
+        _currentPlayer = await LocalStorage.GetItemAsync<PlayerInfo>(LocalStorageConstants.PlayerStorageKey);
 
-        if (CurrentPlayer is null)
+        if (_currentPlayer is null)
         {
             Navigation.NavigateTo("/");
         }
     }
 
-    private async Task SetupHubsConnection()
+    private async Task JoinClickHandler(GameInfo game)
     {
-        var hubsUri = new Uri($"{Host.BaseAddress}hubs");
-
-        HubConnection = new HubConnectionBuilder()
-            .WithUrl(hubsUri)
-            .Build();
-
-        HubConnection.On("GameCreated", async (Guid gameId, string gameName) =>
-        {
-            Console.WriteLine("Game created: {0}: {1}", gameId, gameName);
-            _availableGames.Add(new GameInfo(gameId, gameName));
-            await InvokeAsync(StateHasChanged);
-        });
-
-        await HubConnection.StartAsync();
-    }
-
-    private async Task HandleJoin(GameInfo game)
-    {
-        var response = await Http.PostAsJsonAsync("/game/join", new
-        {
-            GameId = game.Id,
-            PlayerId = CurrentPlayer!.Id
-        });
-
-        if (response.IsSuccessStatusCode)
-        {
-            _currentGame = game;
-        }
+        await GameHub.JoinGame(game.Id, _currentPlayer!.Id);
+        _currentGame = game;
     }
 
     private async Task CreateGame()
@@ -152,6 +144,4 @@
             NewGameName = string.Empty;
         }
     }
-
-    public ValueTask DisposeAsync() => HubConnection.DisposeAsync();
 }

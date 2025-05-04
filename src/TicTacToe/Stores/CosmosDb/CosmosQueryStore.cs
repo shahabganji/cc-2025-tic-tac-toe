@@ -11,7 +11,7 @@ internal sealed partial class CosmosEventStore : IQueryStore
     {
         var streamIterator = _container.GetItemQueryIterator<GameInfo>(
             new QueryDefinition(
-                "SELECT c.Event.Id, c.Event.Name FROM c WHERE c.type = 'GameCreated' OR c.type = 'GameFinished'"));
+                "SELECT IS_DEFINED(c.Event.GameId) as IsFinished, IS_DEFINED(c.Event.Id) ? c.Event.Id  : c.Event.GameId as Id, c.Event.Name FROM c WHERE c.type = 'GameCreated' or c.type = 'GameFinished'"));
 
         if (!streamIterator.HasMoreResults)
             return [];
@@ -28,7 +28,9 @@ internal sealed partial class CosmosEventStore : IQueryStore
             games.AddRange(readNext.Resource);
         }
 
-        return games;
-    }
+        var finishedGames = games.Where(x => x.IsFinished).Select(x => x.Id);
+        var availableGames = games.Where(x => !finishedGames.Contains(x.Id));
 
+        return availableGames;
+    }
 }
