@@ -265,4 +265,23 @@ public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
         await When(new FillCell(GameId, _xPlayer, 8));
         Then(new CellFilled(_xPlayer, 8), new GameFinished(GameId, null, null));
     }
+
+    [Fact]
+    public async Task Attempt_to_fill_a_cell_when_game_is_finished_should_be_rejected()
+    {
+        Given(NewGame,
+            new PlayerJoined(_xPlayer),
+            new PlayerJoined(_oPlayer),
+            new CellFilled(_xPlayer, 0),
+            new CellFilled(_oPlayer, 2),
+            new CellFilled(_xPlayer, 5),
+            new CellFilled(_oPlayer, 6),
+            new CellFilled(_xPlayer, 3),
+            new CellFilled(_oPlayer, 4),
+            new GameFinished(GameId, _oPlayer, _xPlayer)
+        );
+
+        await Assert.ThrowsAsync<InvalidOperationException>( () => When(new FillCell(GameId, _xPlayer, 1)));
+    }
+    
 }

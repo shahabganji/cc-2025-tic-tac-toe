@@ -43,5 +43,6 @@ public sealed partial class Game
     {
         Winner = finishedGame.WinnerId;
         Loser = finishedGame.LoserId;
+        IsGameFinished = true;
     }
 }

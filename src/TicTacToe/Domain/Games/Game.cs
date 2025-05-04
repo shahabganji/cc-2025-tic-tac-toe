@@ -9,6 +9,8 @@ public sealed partial class Game : AggregateRoot
     public Guid? Winner { get; private set; }
     public Guid? Loser { get; private set; }
 
+    public bool IsGameFinished { get; private set; }
+
     private Guid? XPlayer { get; set; }
     private Guid? OPlayer { get; set; }
 
@@ -75,6 +77,11 @@ public sealed partial class Game : AggregateRoot
 
     private void GuardAgainstInvalidPrerequisites(Guid playerId, int cell)
     {
+        if (IsGameFinished)
+        {
+            throw new InvalidOperationException("Game is already finished");
+        }
+        
         if (XPlayer is null || OPlayer is null)
         {
             throw new InvalidOperationException("Game is not started");
