@@ -8,9 +8,12 @@
 
     <div class="text-info">@Game!.Name - You are: @PlayerType</div>
     <hr/>
-    <div class="text-info">You @(_isLoser ? "Lost" : "Won")</div>
+    @if (_winningCombo.Count == 3)
+    {
+        <div class="text-info">You @(_isLoser ? "Lost" : "Won")</div>
+    }
     <hr/>
-    
+
     <div class="board @(_isLoser ? "lose" : "")">
         @for (var i = 0; i < 9; i++)
         {
@@ -28,8 +31,6 @@
     {
         GameHub.OnCellFilled(async (gameId, playerId, cell) =>
         {
-            Console.WriteLine("Cell Filled: {0}: {1}: {2}", gameId, playerId, cell);
-
             if (playerId == Player!.Id)
             {
                 _boardCells[cell] = PlayerType.ToString();
@@ -75,7 +76,7 @@
     [Parameter] public PlayerTypes PlayerType { get; set; }
 
     private HashSet<int> _winningCombo = [];
-    private readonly string[] _boardCells = new string[9];
+    private string[] _boardCells = new string[9];
 
     private bool _isLoser;
     private PlayerTypes? _winner;
@@ -91,6 +92,14 @@
         });
     }
 
+    public void ClearBoard()
+    {
+        _winningCombo = [];
+        _boardCells = new string[9];
+        _isLoser = false;
+        _winner = null;
+    }
+    
     private void EvaluateGame()
     {
         int[][] wins =
