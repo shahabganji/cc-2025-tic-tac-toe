@@ -25,9 +25,7 @@ public class TicTacToeGlobalExceptionHandler(
             Status = StatusCodes.Status400BadRequest,
             Type = "https://httpstatuses.com/400",
             Title = exception.Message,
-            Detail = env.IsDevelopment()
-                ? exception.StackTrace
-                : string.Empty,
+            Detail = string.Empty,
         };
 
         problemDetail.Extensions.TryAdd("requestId", httpContext.TraceIdentifier);

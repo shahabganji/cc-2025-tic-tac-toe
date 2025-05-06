@@ -17,4 +17,16 @@
       <ProjectReference Include="..\TicTacToe.Web\TicTacToe.Web.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="published\web.config" />
+      <_ContentIncludedByDefault Remove="published\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="published\appsettings.json" />
+      <_ContentIncludedByDefault Remove="published\appsettings.Production.json" />
+      <_ContentIncludedByDefault Remove="published\BlazorDebugProxy\BrowserDebugHost.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="published\TicTacToe.deps.json" />
+      <_ContentIncludedByDefault Remove="published\TicTacToe.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="published\TicTacToe.staticwebassets.endpoints.json" />
+      <_ContentIncludedByDefault Remove="published\wwwroot\_framework\blazor.boot.json" />
+    </ItemGroup>
+
 </Project>

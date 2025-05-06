@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.JSInterop;
 
 namespace TicTacToe.Web.Services;
@@ -31,13 +30,19 @@ internal sealed class HttpClientInterceptorService : DelegatingHandler
 
         if (!response.IsSuccessStatusCode)
         {
-
-            var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(cancellationToken);
-
-            if (problem is not null)
+            try
             {
-                Console.WriteLine(problem.Title);
-                await _js.InvokeVoidAsync("showBootstrapAlert", cancellationToken, problem.Title);
+                var problem = await response.Content.ReadFromJsonAsync<ClientProblemDetails>(cancellationToken);
+
+                if (problem is not null)
+                {
+                    Console.WriteLine(problem.Title);
+                    await _js.InvokeVoidAsync("showBootstrapAlert", cancellationToken, problem.Title);
+                }
+            }
+            catch (Exception e)
+            {
+                await _js.InvokeVoidAsync("showBootstrapAlert", cancellationToken, e.Message);
             }
         }
 
