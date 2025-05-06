@@ -65,7 +65,6 @@
 
 @code {
 
-
     [Required(ErrorMessage = "Please enter game name!")]
     public string NewGameName { get; set; } = string.Empty;
 
@@ -79,9 +78,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        InitializeCurrentPlayer();
+        await InitializeCurrentPlayer();
 
-        LoadAvailableGames();
+        await LoadAvailableGames();
 
         await GameHub.SetupConnection();
 

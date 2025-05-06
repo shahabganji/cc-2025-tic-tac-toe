@@ -18,5 +18,5 @@ public abstract class CommandHandler<TCommand, TResponse>(IEventStore eventStore
         return new EventStream<TEntity>(aggregateId, eventStore);
     }
 
-    public abstract Task<TResponse> Handle(TCommand command);
+    public abstract Task<TResponse> Handle(TCommand request);
 }

@@ -1,7 +1,9 @@
 using TicTacToe.Domain.Games.CreateGameFeatures;
 using TicTacToe.Domain.Games.FillCellFeatures;
+using TicTacToe.Domain.Games.GetGameEventsFeature;
 using TicTacToe.Domain.Games.JoinGameFeatures;
 using TicTacToe.Domain.Games.LoadGamesFeature;
+using TicTacToe.Domain.Games.LoadGameStateFeature;
 using TicTacToe.Domain.Players.RegisterFeatures;
 
 namespace TicTacToe.Domain;
@@ -20,6 +22,8 @@ internal static class DomainExtensions
     
     internal static IServiceCollection AddQueryHandlers(this IServiceCollection services)
     {
+        services.AddScoped<GetGameEventsHandler>();
+        services.AddScoped<LoadGameStateHandler>();
         services.AddScoped<ShowListOfGamesHandler>();
         return services;
     }

@@ -6,10 +6,13 @@ using TicTacToe;
 using TicTacToe.Domain;
 using TicTacToe.Domain.Games.CreateGameFeatures;
 using TicTacToe.Domain.Games.FillCellFeatures;
+using TicTacToe.Domain.Games.GetGameEventsFeature;
 using TicTacToe.Domain.Games.LoadGamesFeature;
+using TicTacToe.Domain.Games.LoadGameStateFeature;
 using TicTacToe.Domain.Players.RegisterFeatures;
 using TicTacToe.Hubs;
 using TicTacToe.Stores;
+using GetGameEventsHandler = TicTacToe.Domain.Games.GetGameEventsFeature.GetGameEventsHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,8 +97,7 @@ app.MapGet("/games/available",
     .CacheOutput(policyBuilder => policyBuilder.Expire(TimeSpan.FromSeconds(5)))
     .WithName("ShowAvailableGames");
 
-
-app.MapPost("/game/{gameId:guid}/play/cell",
+app.MapPost("/games/{gameId:guid}/play/cell",
         async (Guid gameId, FillCell cell, FillCellHandler handler,
             IHubContext<TicTacToeHub, ITicTacToeClient> context) =>
         {
@@ -110,6 +112,24 @@ app.MapPost("/game/{gameId:guid}/play/cell",
             return Results.Ok();
         })
     .WithName("FillCell");
+
+app.MapGet("/games/{gameId:guid}/events",
+        async (Guid gameId, GetGameEventsHandler handler) =>
+        {
+            var result = await handler.Query(new GetGameEvents(gameId));
+
+            return Results.Ok(result);
+        })
+    .WithName("GetGameEvents");
+
+app.MapGet("/games/{gameId:guid}/",
+        async (Guid gameId, LoadGameStateHandler handler) =>
+        {
+            var result = await handler.Handle(new LoadGameState(gameId));
+
+            return Results.Ok(result);
+        })
+    .WithName("LoadState");
 
 
 // if the requested route does not exist, then route it to the index.html file, blazor landing page

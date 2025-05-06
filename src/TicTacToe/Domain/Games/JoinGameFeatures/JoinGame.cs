@@ -6,9 +6,9 @@ public sealed class JoinGameHandler(IEventStore store) : CommandHandler<JoinGame
 {
     private readonly IEventStore _store = store;
     
-    public override async Task<string> Handle(JoinGame command)
+    public override async Task<string> Handle(JoinGame request)
     {
-        var gameStream = GetStream<Game>(command.GameId);
+        var gameStream = GetStream<Game>(request.GameId);
         var game = await gameStream.Get();
 
         if (game is null)
@@ -16,7 +16,7 @@ public sealed class JoinGameHandler(IEventStore store) : CommandHandler<JoinGame
             throw new InvalidOperationException("No such game is found");
         }
         
-        var playerType = game.Join(command.PlayerId);
+        var playerType = game.Join(request.PlayerId);
         
         _store.AppendToStream(game.Id, game.Changes);
         

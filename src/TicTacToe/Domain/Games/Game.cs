@@ -37,7 +37,7 @@ public sealed partial class Game : AggregateRoot
 
         return game;
     }
-    
+
     public string Join(Guid playerId)
     {
         if (XPlayer == playerId)
@@ -49,12 +49,12 @@ public sealed partial class Game : AggregateRoot
         {
             return "O";
         }
-        
+
         Apply(new PlayerJoined(playerId));
-        
+
         return XPlayer == playerId ? "X" : "O";
     }
-    
+
     public void Play(Guid playerId, int cell)
     {
         GuardAgainstInvalidPrerequisites(playerId, cell);
@@ -81,7 +81,7 @@ public sealed partial class Game : AggregateRoot
         {
             throw new InvalidOperationException("Game is already finished");
         }
-        
+
         if (XPlayer is null || OPlayer is null)
         {
             throw new InvalidOperationException("Game is not started");
@@ -91,7 +91,7 @@ public sealed partial class Game : AggregateRoot
         {
             throw new InvalidOperationException("Player is not part of the game");
         }
-        
+
         if (_boardCells[cell] != EmptyCell)
         {
             throw new InvalidOperationException("Cell is already filled");
@@ -127,4 +127,6 @@ public sealed partial class Game : AggregateRoot
         Apply(new GameFinished(Id, playerId, playerId == XPlayer ? OPlayer.Value : XPlayer.Value));
         return true;
     }
+
+    public string[] ToArray() => _boardCells.Select(cell => cell.ToString() ?? "").ToArray();
 }

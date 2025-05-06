@@ -38,7 +38,6 @@ internal sealed partial class CosmosEventStore(Container container) : IEventStor
     {
         await InitializeActiveStream(streamId);
 
-
         var streamIterator =
             _container.GetItemQueryIterator<CosmosStoredEvent>(
                 new QueryDefinition(

@@ -1,31 +1,64 @@
+@using System.Text.Json
 @using TicTacToe.Web.Contracts
 @using TicTacToe.Web.Services
 @inject HttpClient Http
 @inject ConfettiService Confetti
 @inject GameHubService GameHub
 
-<div class="board-wrapper">
+<div class="text-info">@Game!.Name ( @Game.Id ) - You are: @PlayerType</div>
+<br/>
+@if (_winningCombo.Count == 3)
+{
+    <div class="text-info fw-bold @(_isLoser ? "text-danger" : "text-success")">You @(_isLoser ? "Lost" : "Won")</div>
+}
+<hr/>
 
-    <div class="text-info">@Game!.Name - You are: @PlayerType</div>
-    <hr/>
-    @if (_winningCombo.Count == 3)
-    {
-        <div class="text-info">You @(_isLoser ? "Lost" : "Won")</div>
-    }
-    <hr/>
+<div class="row">
 
-    <div class="board @(_isLoser ? "lose" : "")">
-        @for (var i = 0; i < 9; i++)
-        {
-            var localIndex = i;
-            <Cell Value="@_boardCells[i]" OnClick="async () => { await CellClickHandler(localIndex); }"
-                  IsWinner="@_winningCombo.Contains(i)"/>
-        }
+    <div class="col-6">
+
+        <div class="board-wrapper">
+            <div class="board @(_isLoser ? "lose" : "")">
+                @for (var i = 0; i < 9; i++)
+                {
+                    var localIndex = i;
+                    <Cell Value="@_boardCells[i]" OnClick="async () => { await CellClickHandler(localIndex); }"
+                          IsWinner="@_winningCombo.Contains(i)"/>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-6">
+        
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                @foreach (var ev in _evetns)
+                {
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-4">@ev.EventId</div>
+                            <div class="col-4">@ev.EventName</div>
+                            <div class="col-4">@ev.DisplayInfo</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        
+        
     </div>
 </div>
 
+
 @code {
-    protected override Task OnInitializedAsync()
+
+    [Parameter] public GameInfo? Game { get; set; }
+    [Parameter] public PlayerInfo? Player { get; set; }
+    [Parameter] public PlayerTypes PlayerType { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
         GameHub.OnCellFilled(async (gameId, playerId, cell) =>
         {
@@ -45,8 +78,10 @@
             await RenderResult();
         });
 
-        return base.OnInitializedAsync();
+        await ListGameEvents();
+        await LoadCurrentState();
     }
+
 
     private async Task RenderResult()
     {
@@ -69,9 +104,7 @@
         }
     }
 
-    [Parameter] public GameInfo? Game { get; set; }
-    [Parameter] public PlayerInfo? Player { get; set; }
-    [Parameter] public PlayerTypes PlayerType { get; set; }
+    private List<EventsInfo> _evetns = [];
 
     private HashSet<int> _winningCombo = [];
     private string[] _boardCells = new string[9];
@@ -82,12 +115,28 @@
 
     private async Task CellClickHandler(int cell)
     {
-        await Http.PostAsJsonAsync($"/game/{Game!.Id}/play/cell", new
+        await Http.PostAsJsonAsync($"/games/{Game!.Id}/play/cell", new
         {
             GameId = Game.Id,
             PlayerId = Player!.Id,
             Cell = cell
         });
+
+        await ListGameEvents();
+    }
+
+    private async Task ListGameEvents()
+    {
+        _evetns.Clear();
+        var result = await Http.GetFromJsonAsync<IEnumerable<EventsInfo>>($"/games/{Game!.Id}/events");
+        _evetns.AddRange(result!);
+        await InvokeAsync(StateHasChanged);
+    }
+    private async Task LoadCurrentState()
+    {
+        var result = await Http.GetFromJsonAsync<string[]>($"/games/{Game!.Id}/");
+        _boardCells = result!;
+        await InvokeAsync(StateHasChanged);
     }
 
     public void ClearBoard()
@@ -97,7 +146,7 @@
         _isLoser = false;
         _winner = null;
     }
-    
+
     private void EvaluateGame()
     {
         int[][] wins =
