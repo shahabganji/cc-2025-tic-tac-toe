@@ -15,53 +15,54 @@
 
 <PageTitle>Games</PageTitle>
 
-
 <div class="row">
-    <!-- Left Column: Game Creation Form -->
-    <div class="col-md-6">
-        <div class="game-card shadow-sm p-4">
-            <h4 class="mb-3">Create a New Game</h4>
-            <EditForm Model="this" OnValidSubmit="CreateGame">
-                <DataAnnotationsValidator/>
-                <div class="mb-3">
-                    <InputText id="PlayerName" class="form-control" placeholder="Enter a game name..."
-                               @bind-Value="NewGameName"/>
-                    <ValidationMessage For="@(() => NewGameName)" class="text-danger mt-1"/>
+    <div class="col-12">
+
+        <div class="row">
+            <!-- Left Column: Game Creation Form -->
+            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                <div class="game-card shadow-sm p-4">
+                    <h4 class="mb-3">Create a New Game</h4>
+                    <EditForm Model="this" OnValidSubmit="CreateGame">
+                        <DataAnnotationsValidator/>
+                        <div class="mb-3">
+                            <InputText id="PlayerName" class="form-control" placeholder="Enter a game name..."
+                                       @bind-Value="NewGameName"/>
+                            <ValidationMessage For="@(() => NewGameName)" class="text-danger mt-1"/>
+                        </div>
+                        <button class="btn btn-primary w-100">Create New Game</button>
+                    </EditForm>
                 </div>
-                <button class="btn btn-primary w-100">Create New Game</button>
-            </EditForm>
-        </div>
-    </div>
-
-    <!-- Right Column: Game View -->
-    <div class="col-md-6">
-        <div class="game-card shadow-sm p-4 game-container">
-            <h4 class="mb-4">Player: @_currentPlayer?.Name</h4>
-
-            <div class="home-layout mb-3">
-                <GameList OnJoin="JoinClickHandler" AvailableGames="_availableGames"/>
             </div>
 
-            <hr/>
-            <button class="btn btn-outline-secondary" onclick="toggleTheme()">Toggle Theme</button>
+            <!-- Right Column: Game View -->
+            <div class="col-12 col-md-6">
+                <div class="game-card shadow-sm p-4 game-container">
+                    <h4 class="mb-4">Player: @_currentPlayer?.Name</h4>
+
+                    <div class="home-layout mb-3">
+                        <GameList OnJoin="JoinClickHandler" AvailableGames="_availableGames"/>
+                    </div>
+
+                    <hr/>
+                    <button class="btn btn-outline-secondary" onclick="toggleTheme()">Toggle Theme</button>
+                </div>
+            </div>
         </div>
+
+        @if (_currentGame != null)
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-4">
+                        <Board Game="@_currentGame" Player="_currentPlayer" PlayerType="_playerType" @ref="_boardRef"/>
+                        @* OnGameOver="() => _currentGame = null" *@
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
-
-@if (_currentGame != null)
-{
-    <br/>
-    <hr/>
-
-    <div class="row">
-        <div class="col-12">
-            <div class="mb-4">
-                <Board Game="@_currentGame" Player="_currentPlayer" PlayerType="_playerType" @ref="_boardRef"/>
-                @* OnGameOver="() => _currentGame = null" *@
-            </div>
-        </div>
-    </div>
-}
 
 
 @code {
