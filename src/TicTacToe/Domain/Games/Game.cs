@@ -5,8 +5,6 @@ namespace TicTacToe.Domain.Games;
 
 public sealed partial class Game : EventSourcedAggregateRoot
 {
-    private Guid? _winner;
-    private Guid? _loser;
     private bool _isGameFinished;
     private Guid? _xPlayer;
     private Guid? _oPlayer;

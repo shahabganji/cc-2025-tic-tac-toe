@@ -41,8 +41,6 @@ public sealed partial class Game
 
     public void When(GameFinished finishedGame)
     {
-        _winner = finishedGame.WinnerId;
-        _loser = finishedGame.LoserId;
         _isGameFinished = true;
     }
 }
