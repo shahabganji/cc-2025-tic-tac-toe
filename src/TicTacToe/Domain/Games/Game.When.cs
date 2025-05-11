@@ -11,7 +11,7 @@ public sealed partial class Game
 
         for (var i = 0; i < _boardCells.Length; i++)
         {
-            _boardCells[i] = EmptyCell;
+            _boardCells[i] = Cell.Empty;
         }
     }
 
@@ -34,7 +34,7 @@ public sealed partial class Game
 
     public void When(CellFilled playedSquare)
     {
-        _boardCells[playedSquare.Cell] = playedSquare.PlayerId == _xPlayer ? XCell : OCell;
+        _boardCells[playedSquare.Cell] = playedSquare.PlayerId == _xPlayer ? Cell.X : Cell.O;
 
         _currentPlayer = playedSquare.PlayerId == _xPlayer ? _oPlayer : _xPlayer;
     }

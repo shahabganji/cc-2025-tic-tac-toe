@@ -9,12 +9,8 @@ public sealed partial class Game : EventSourcedAggregateRoot
     private Guid? _xPlayer;
     private Guid? _oPlayer;
     private Guid? _currentPlayer;
-
-    private const char XCell = 'X';
-    private const char OCell = 'O';
-    private static readonly char? EmptyCell = null;
-
-    private readonly char?[] _boardCells = new char?[9];
+    
+    private readonly Cell[] _boardCells = new Cell[9];
 
     private readonly int[][] _wins =
     [
@@ -61,7 +57,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
             throw new InvalidOperationException("It is not your turn");
         }
 
-        var cellValue = playerId == _xPlayer ? XCell : OCell;
+        var cellValue = playerId == _xPlayer ? Cell.X : Cell.O;
         _boardCells[cell] = cellValue;
 
         Apply(new CellFilled(playerId, cell));
@@ -89,7 +85,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
             throw new InvalidOperationException("Player is not part of the game");
         }
 
-        if (_boardCells[cell] != EmptyCell)
+        if (_boardCells[cell] != Cell.Empty)
         {
             throw new InvalidOperationException("Cell is already filled");
         }
@@ -97,7 +93,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
 
     private void DetectFinishedGame()
     {
-        var gameFinished = _boardCells.All(boardCell => boardCell != EmptyCell);
+        var gameFinished = _boardCells.All(boardCell => boardCell != Cell.Empty);
         if (gameFinished)
         {
             Apply(new GameFinished(Id, null, null));
@@ -110,7 +106,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
         foreach (var combo in _wins)
         {
             var (a, b, c) = (combo[0], combo[1], combo[2]);
-            if (_boardCells[a] == EmptyCell || _boardCells[a] != _boardCells[b] || _boardCells[b] != _boardCells[c])
+            if (_boardCells[a] == Cell.Empty || _boardCells[a] != _boardCells[b] || _boardCells[b] != _boardCells[c])
                 continue;
 
             hasWinner = true;
