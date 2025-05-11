@@ -1,6 +1,6 @@
-namespace TicTacToe.Domain;
+namespace TicTacToe.Domain.Shared;
 
-public sealed class EventStream<T>(Guid streamId, IEventStore store) where T : AggregateRoot, new()
+public sealed class EventStream<T>(Guid streamId, IEventStore store) where T : EventSourcedAggregateRoot, new()
 {
     public long Version => store.Version;
 

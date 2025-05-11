@@ -1,9 +1,9 @@
-using TicTacToe.Domain;
 using TicTacToe.Domain.Players.Events;
-using TicTacToe.Domain.Players.RegisterFeatures;
+using TicTacToe.Domain.Shared;
+using TicTacToe.Features.Players.RegisterFeatures;
 using TicTacToe.Specifications.Helpers;
 
-namespace TicTacToe.Specifications.Domain.Players;
+namespace TicTacToe.Specifications.Features.Players;
 
 public sealed class RegisterSpecs : CommandHandlerHelper<RegisterPlayer>
 {

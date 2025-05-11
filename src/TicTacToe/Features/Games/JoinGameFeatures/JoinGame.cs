@@ -1,4 +1,8 @@
-namespace TicTacToe.Domain.Games.JoinGameFeatures;
+using TicTacToe.Domain;
+using TicTacToe.Domain.Games;
+using TicTacToe.Domain.Shared;
+
+namespace TicTacToe.Features.Games.JoinGameFeatures;
 
 public record struct JoinGame(Guid GameId, Guid PlayerId);
 

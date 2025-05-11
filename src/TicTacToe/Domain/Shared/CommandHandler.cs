@@ -1,8 +1,8 @@
-namespace TicTacToe.Domain;
+namespace TicTacToe.Domain.Shared;
 
 public abstract class CommandHandler<TCommand>(IEventStore eventStore)
 {
-    protected EventStream<TEntity> GetStream<TEntity>(Guid aggregateId) where TEntity : AggregateRoot, new()
+    protected EventStream<TEntity> GetStream<TEntity>(Guid aggregateId) where TEntity : EventSourcedAggregateRoot, new()
     {
         return new EventStream<TEntity>(aggregateId, eventStore);
     }
@@ -13,7 +13,7 @@ public abstract class CommandHandler<TCommand>(IEventStore eventStore)
 
 public abstract class CommandHandler<TCommand, TResponse>(IEventStore eventStore)
 {
-    protected EventStream<TEntity> GetStream<TEntity>(Guid aggregateId) where TEntity : AggregateRoot, new()
+    protected EventStream<TEntity> GetStream<TEntity>(Guid aggregateId) where TEntity : EventSourcedAggregateRoot, new()
     {
         return new EventStream<TEntity>(aggregateId, eventStore);
     }

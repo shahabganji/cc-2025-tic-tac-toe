@@ -1,7 +1,7 @@
-using TicTacToe.Domain.Games.LoadGamesFeature;
+using TicTacToe.Features.Games.LoadGamesFeature;
 using TicTacToe.Stores;
 
-namespace TicTacToe.Domain;
+namespace TicTacToe.Domain.Shared;
 
 public interface IQueryStore
 {

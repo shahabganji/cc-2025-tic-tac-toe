@@ -1,6 +1,8 @@
+using TicTacToe.Domain;
+using TicTacToe.Domain.Shared;
 using TicTacToe.Web.Contracts;
 
-namespace TicTacToe.Domain.Games.LoadGamesFeature;
+namespace TicTacToe.Features.Games.LoadGamesFeature;
 
 public record ShowListOfAvailableGames();
 

@@ -1,9 +1,9 @@
-﻿using TicTacToe.Domain;
-using TicTacToe.Domain.Games.CreateGameFeatures;
-using TicTacToe.Domain.Games.Events;
+﻿using TicTacToe.Domain.Games.Events;
+using TicTacToe.Domain.Shared;
+using TicTacToe.Features.Games.CreateGameFeatures;
 using TicTacToe.Specifications.Helpers;
 
-namespace TicTacToe.Specifications.Domain.Games;
+namespace TicTacToe.Specifications.Features.Games;
 
 public sealed class GameSpecifications : CommandHandlerHelper<CreateGame>
 {

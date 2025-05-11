@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Microsoft.Azure.Cosmos;
 using TicTacToe.Domain;
+using TicTacToe.Domain.Shared;
 
 namespace TicTacToe.Stores.CosmosDb;
 

@@ -1,6 +1,6 @@
-namespace TicTacToe.Domain;
+namespace TicTacToe.Domain.Shared;
 
-public abstract class AggregateRoot
+public abstract class EventSourcedAggregateRoot
 {
     private readonly List<IEvent> _changes = [];
     public IReadOnlyCollection<IEvent> Changes => _changes.AsReadOnly();

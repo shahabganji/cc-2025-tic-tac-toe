@@ -1,7 +1,8 @@
 using TicTacToe.Domain;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Core;
-using TicTacToe.Domain.Games.LoadGamesFeature;
+using TicTacToe.Domain.Shared;
+using TicTacToe.Features.Games.LoadGamesFeature;
 using TicTacToe.Web.Contracts;
 
 

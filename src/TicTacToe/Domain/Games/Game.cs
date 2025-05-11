@@ -1,8 +1,9 @@
 using TicTacToe.Domain.Games.Events;
+using TicTacToe.Domain.Shared;
 
 namespace TicTacToe.Domain.Games;
 
-public sealed partial class Game : AggregateRoot
+public sealed partial class Game : EventSourcedAggregateRoot
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; } = null!;

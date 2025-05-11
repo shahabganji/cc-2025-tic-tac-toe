@@ -1,7 +1,9 @@
+using TicTacToe.Domain;
 using TicTacToe.Domain.Games.Events;
+using TicTacToe.Domain.Shared;
 using TicTacToe.Web.Contracts;
 
-namespace TicTacToe.Domain.Games.GetGameEventsFeature;
+namespace TicTacToe.Features.Games.GetGameEventsFeature;
 
 public sealed record GetGameEvents(Guid GameId);
 

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
-using TicTacToe.Domain.Games.JoinGameFeatures;
+using TicTacToe.Features.Games.JoinGameFeatures;
 
 namespace TicTacToe.Hubs;
 

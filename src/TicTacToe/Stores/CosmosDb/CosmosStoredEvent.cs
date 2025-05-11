@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using TicTacToe.Domain;
+using TicTacToe.Domain.Shared;
 
 namespace TicTacToe.Stores.CosmosDb;
 

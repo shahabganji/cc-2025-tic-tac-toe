@@ -1,4 +1,8 @@
-namespace TicTacToe.Domain.Players.RegisterFeatures;
+using TicTacToe.Domain;
+using TicTacToe.Domain.Players;
+using TicTacToe.Domain.Shared;
+
+namespace TicTacToe.Features.Players.RegisterFeatures;
 
 public record struct RegisterPlayer(Guid Id, string Name);
 

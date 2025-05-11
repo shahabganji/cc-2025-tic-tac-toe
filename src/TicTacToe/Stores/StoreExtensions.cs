@@ -1,5 +1,6 @@
 using Microsoft.Azure.Cosmos;
 using TicTacToe.Domain;
+using TicTacToe.Domain.Shared;
 using TicTacToe.Stores.CosmosDb;
 using TicTacToe.Stores.InMemory;
 

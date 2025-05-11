@@ -1,4 +1,4 @@
-namespace TicTacToe.Domain;
+namespace TicTacToe.Domain.Shared;
 
 public interface IEventStore
 {

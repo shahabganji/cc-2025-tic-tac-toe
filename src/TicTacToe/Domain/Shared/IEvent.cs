@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using TicTacToe.Domain.Games.Events;
 using TicTacToe.Domain.Players.Events;
 
-namespace TicTacToe.Domain;
+namespace TicTacToe.Domain.Shared;
 
 [JsonPolymorphic(IgnoreUnrecognizedTypeDiscriminators = true)]
 [JsonDerivedType(typeof(GameCreated), nameof(GameCreated))]

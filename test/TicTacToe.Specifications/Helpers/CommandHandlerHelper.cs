@@ -1,5 +1,6 @@
 using Shouldly;
 using TicTacToe.Domain;
+using TicTacToe.Domain.Shared;
 
 namespace TicTacToe.Specifications.Helpers;
 

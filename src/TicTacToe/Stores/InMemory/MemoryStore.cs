@@ -1,4 +1,5 @@
 using TicTacToe.Domain;
+using TicTacToe.Domain.Shared;
 
 namespace TicTacToe.Stores.InMemory;
 

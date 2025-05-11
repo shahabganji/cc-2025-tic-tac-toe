@@ -1,8 +1,8 @@
-using TicTacToe.Domain.Games.Events;
-using TicTacToe.Domain.Games.GetGameEventsFeature;
-using TicTacToe.Web.Contracts;
+using TicTacToe.Domain;
+using TicTacToe.Domain.Games;
+using TicTacToe.Domain.Shared;
 
-namespace TicTacToe.Domain.Games.LoadGameStateFeature;
+namespace TicTacToe.Features.Games.LoadGameStateFeature;
 
 public sealed record LoadGameState(Guid GameId);
 

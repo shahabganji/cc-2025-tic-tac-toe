@@ -1,9 +1,9 @@
-using TicTacToe.Domain;
 using TicTacToe.Domain.Games.Events;
-using TicTacToe.Domain.Games.FillCellFeatures;
+using TicTacToe.Domain.Shared;
+using TicTacToe.Features.Games.FillCellFeatures;
 using TicTacToe.Specifications.Helpers;
 
-namespace TicTacToe.Specifications.Domain.Games;
+namespace TicTacToe.Specifications.Features.Games;
 
 public sealed class FillCellSpecs : CommandHandlerHelper<FillCell>
 {
