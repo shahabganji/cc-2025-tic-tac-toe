@@ -52,11 +52,6 @@ public sealed partial class Game : EventSourcedAggregateRoot
     {
         GuardAgainstInvalidPrerequisites(playerId, cell);
 
-        if (_currentPlayer != playerId)
-        {
-            throw new InvalidOperationException("It is not your turn");
-        }
-
         var cellValue = playerId == _xPlayer ? Cell.X : Cell.O;
         _boardCells[cell] = cellValue;
 
@@ -88,6 +83,11 @@ public sealed partial class Game : EventSourcedAggregateRoot
         if (_boardCells[cell] != Cell.Empty)
         {
             throw new InvalidOperationException("Cell is already filled");
+        }
+        
+        if (_currentPlayer != playerId)
+        {
+            throw new InvalidOperationException("It is not your turn");
         }
     }
 
