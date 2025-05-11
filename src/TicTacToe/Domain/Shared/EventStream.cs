@@ -24,7 +24,7 @@ public sealed class EventStream<T>(Guid streamId, IEventStore store) where T : E
         {
             try
             {
-                instance.Mutate(e);
+                instance.When(e);
             }
             catch
             {

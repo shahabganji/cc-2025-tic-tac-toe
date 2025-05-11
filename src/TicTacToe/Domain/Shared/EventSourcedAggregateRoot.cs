@@ -5,13 +5,13 @@ public abstract class EventSourcedAggregateRoot
     private readonly List<IEvent> _changes = [];
     public IReadOnlyCollection<IEvent> Changes => _changes.AsReadOnly();
 
-    protected void Apply(IEvent e)
+    protected void Apply(IEvent @event)
     {
-        _changes.Add(e);
-        Mutate(e);
+        _changes.Add(@event);
+        When(@event);
     }
 
-    public void Mutate(IEvent e)
+    public void When(IEvent e)
     {
         ((dynamic)this).When((dynamic)e);
     }
