@@ -5,21 +5,16 @@ namespace TicTacToe.Domain.Games;
 
 public sealed partial class Game : EventSourcedAggregateRoot
 {
-    public Guid Id { get; private set; }
-    public string Name { get; private set; } = null!;
-    public Guid? Winner { get; private set; }
-    public Guid? Loser { get; private set; }
+    private Guid? _winner;
+    private Guid? _loser;
+    private bool _isGameFinished;
+    private Guid? _xPlayer;
+    private Guid? _oPlayer;
+    private Guid? _currentPlayer;
 
-    public bool IsGameFinished { get; private set; }
-
-    private Guid? XPlayer { get; set; }
-    private Guid? OPlayer { get; set; }
-
-    private Guid? CurrentPlayer { get; set; }
-
-    private static readonly char? EmptyCell = null;
     private const char XCell = 'X';
     private const char OCell = 'O';
+    private static readonly char? EmptyCell = null;
 
     private readonly char?[] _boardCells = new char?[9];
 
@@ -29,6 +24,9 @@ public sealed partial class Game : EventSourcedAggregateRoot
         [0, 3, 6], [1, 4, 7], [2, 5, 8],
         [0, 4, 8], [2, 4, 6]
     ];
+    
+    public Guid Id { get; private set; }
+    public string Name { get; private set; } = null!;
 
     public static Game Create(Guid commandId, string suggestedName)
     {
@@ -41,31 +39,31 @@ public sealed partial class Game : EventSourcedAggregateRoot
 
     public string Join(Guid playerId)
     {
-        if (XPlayer == playerId)
+        if (_xPlayer == playerId)
         {
             return "X";
         }
 
-        if (OPlayer == playerId)
+        if (_oPlayer == playerId)
         {
             return "O";
         }
 
         Apply(new PlayerJoined(playerId));
 
-        return XPlayer == playerId ? "X" : "O";
+        return _xPlayer == playerId ? "X" : "O";
     }
 
     public void Play(Guid playerId, int cell)
     {
         GuardAgainstInvalidPrerequisites(playerId, cell);
 
-        if (CurrentPlayer != playerId)
+        if (_currentPlayer != playerId)
         {
             throw new InvalidOperationException("It is not your turn");
         }
 
-        var cellValue = playerId == XPlayer ? XCell : OCell;
+        var cellValue = playerId == _xPlayer ? XCell : OCell;
         _boardCells[cell] = cellValue;
 
         Apply(new CellFilled(playerId, cell));
@@ -78,17 +76,17 @@ public sealed partial class Game : EventSourcedAggregateRoot
 
     private void GuardAgainstInvalidPrerequisites(Guid playerId, int cell)
     {
-        if (IsGameFinished)
+        if (_isGameFinished)
         {
             throw new InvalidOperationException("Game is already finished");
         }
 
-        if (XPlayer is null || OPlayer is null)
+        if (_xPlayer is null || _oPlayer is null)
         {
             throw new InvalidOperationException("Game is not started");
         }
 
-        if (playerId != XPlayer && playerId != OPlayer)
+        if (playerId != _xPlayer && playerId != _oPlayer)
         {
             throw new InvalidOperationException("Player is not part of the game");
         }
@@ -125,7 +123,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
             return false;
         }
 
-        Apply(new GameFinished(Id, playerId, playerId == XPlayer ? OPlayer.Value : XPlayer.Value));
+        Apply(new GameFinished(Id, playerId, playerId == _xPlayer ? _oPlayer.Value : _xPlayer.Value));
         return true;
     }
 

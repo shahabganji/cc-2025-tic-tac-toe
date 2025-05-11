@@ -17,32 +17,32 @@ public sealed partial class Game
 
     public void When(PlayerJoined joinedPlayer)
     {
-        if (XPlayer is not null && OPlayer is not null)
+        if (_xPlayer is not null && _oPlayer is not null)
         {
             throw new InvalidOperationException("Game is full");
         }
 
-        if (XPlayer is null)
+        if (_xPlayer is null)
         {
-            XPlayer = joinedPlayer.PlayerId;
-            CurrentPlayer = XPlayer;
+            _xPlayer = joinedPlayer.PlayerId;
+            _currentPlayer = _xPlayer;
             return;
         }
 
-        OPlayer = joinedPlayer.PlayerId;
+        _oPlayer = joinedPlayer.PlayerId;
     }
 
     public void When(CellFilled playedSquare)
     {
-        _boardCells[playedSquare.Cell] = playedSquare.PlayerId == XPlayer ? XCell : OCell;
+        _boardCells[playedSquare.Cell] = playedSquare.PlayerId == _xPlayer ? XCell : OCell;
 
-        CurrentPlayer = playedSquare.PlayerId == XPlayer ? OPlayer : XPlayer;
+        _currentPlayer = playedSquare.PlayerId == _xPlayer ? _oPlayer : _xPlayer;
     }
 
     public void When(GameFinished finishedGame)
     {
-        Winner = finishedGame.WinnerId;
-        Loser = finishedGame.LoserId;
-        IsGameFinished = true;
+        _winner = finishedGame.WinnerId;
+        _loser = finishedGame.LoserId;
+        _isGameFinished = true;
     }
 }
