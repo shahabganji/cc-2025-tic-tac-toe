@@ -7,7 +7,7 @@ using TicTacToe.Features.Games.LoadGameStateFeature;
 
 namespace TicTacToe.Features.Games;
 
-internal static class GameExtensions
+internal static class GameServiceCollectionExtensions
 {
     internal static IServiceCollection AddGameFeatures(this IServiceCollection services)
     {

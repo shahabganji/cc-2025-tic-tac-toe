@@ -147,7 +147,7 @@
             return;
         }
 
-        var response = await Http.PostAsJsonAsync("/game", new { suggestedName = NewGameName });
+        var response = await Http.PostAsJsonAsync("/games", new { suggestedName = NewGameName });
 
         if (response.IsSuccessStatusCode)
         {

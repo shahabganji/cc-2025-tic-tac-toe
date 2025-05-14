@@ -1,6 +1,13 @@
 ﻿<Solution>
-  <Folder Name="/src/">
-    <Project Path="src\TicTacToe.Web\TicTacToe.Web.csproj" Type="Classic C#" />
+  <Folder Name="/docs/">
+    <File Path="README.md" />
   </Folder>
-  <Folder Name="/test/" />
+  <Folder Name="/src/">
+    <Project Path="src\TicTacToe.GameListAsyncProjection\TicTacToe.GameListAsyncProjection.csproj" Type="Classic C#" />
+    <Project Path="src\TicTacToe.Web\TicTacToe.Web.csproj" Type="Classic C#" />
+    <Project Path="src\TicTacToe\TicTacToe.csproj" Type="Classic C#" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test\TicTacToe.Specifications\TicTacToe.Specifications.csproj" Type="Classic C#" />
+  </Folder>
 </Solution>
