@@ -80,7 +80,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
             throw new InvalidOperationException("Player is not part of the game");
         }
 
-        if (!_boardCells[cell].IsEmpty)
+        if (_boardCells[cell].IsEmpty == false)
         {
             throw new InvalidOperationException("Cell is already filled");
         }
@@ -93,7 +93,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
 
     private void DetectFinishedGame()
     {
-        var gameFinished = _boardCells.All(boardCell => boardCell != Cell.Empty);
+        var gameFinished = _boardCells.All(boardCell => !boardCell.IsEmpty);
         if (gameFinished)
         {
             Apply(new GameFinished(Id, null, null));
