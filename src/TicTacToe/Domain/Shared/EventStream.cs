@@ -17,26 +17,6 @@ public sealed class EventStream<T>(Guid streamId, IEventStore store) where T : E
     /// </returns>
     public async Task<T?> Get(bool ignoreUnknownEvents = false)
     {
-        var events = await store.LoadStreamEvents(streamId);
-
-        if (events.Count == 0)
-            return null;
-
-        var instance = new T();
-
-        foreach (var e in events)
-        {
-            try
-            {
-                instance.When(e);
-            }
-            catch
-            {
-                if (!ignoreUnknownEvents)
-                    throw;
-            }
-        }
-
-        return instance;
+        throw new NotImplementedException();
     }
 }
