@@ -55,24 +55,24 @@ public class GameListAsyncSnapshotProjector(ILogger<GameListAsyncSnapshotProject
 
         if (gameListChanged)
         {
-            await container.UpsertItemAsync(gameList, new PartitionKey(nameof(GameListAsyncSnapshot)));
+            await container.UpsertItemAsync(gameList, new PartitionKey(nameof(ActiveGamesListProjection)));
         }
     }
 
     // Todo: rename this to projection
-    private async Task<GameListAsyncSnapshot> InitializeGameList()
+    private async Task<ActiveGamesListProjection> InitializeGameList()
     {
-        const string id = nameof(GameListAsyncSnapshot);
+        const string id = nameof(ActiveGamesListProjection);
         var partitionKey = new PartitionKey(id);
 
         try
         {
-            var response = await container.ReadItemAsync<GameListAsyncSnapshot>(id, partitionKey);
+            var response = await container.ReadItemAsync<ActiveGamesListProjection>(id, partitionKey);
             return response.Resource;
         }
         catch
         {
-            return new GameListAsyncSnapshot();
+            return new ActiveGamesListProjection();
         }
     }
 }

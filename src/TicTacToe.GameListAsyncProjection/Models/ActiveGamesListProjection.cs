@@ -6,10 +6,10 @@ public record GameCreated(Guid Id, string Name);
 
 public record GameFinished(Guid GameId);
 
-public sealed class GameListAsyncSnapshot
+public sealed class ActiveGamesListProjection
 {
-    public string id => nameof(GameListAsyncSnapshot);
-    public string StreamId => nameof(GameListAsyncSnapshot);
+    public string id => nameof(ActiveGamesListProjection);
+    public string StreamId => nameof(ActiveGamesListProjection);
 
     public List<GameInfo>? AvailableGames { get; set; }
 
