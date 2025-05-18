@@ -18,7 +18,7 @@ namespace TicTacToe;
 
 internal static class ProgramExtension
 {
-    internal static WebApplication PrepareLiveDemo(WebApplicationBuilder webApplicationBuilder)
+    internal static WebApplication CreateTicTacToe(WebApplicationBuilder webApplicationBuilder)
     {
         webApplicationBuilder.Services
             .AddGameFeatures()

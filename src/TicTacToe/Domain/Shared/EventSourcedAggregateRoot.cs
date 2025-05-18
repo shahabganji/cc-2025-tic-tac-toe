@@ -11,8 +11,5 @@ public abstract class EventSourcedAggregateRoot
         When(@event);
     }
 
-    public void When(IEvent e)
-    {
-        ((dynamic)this).When((dynamic)e);
-    }
+    public void When(IEvent e) => ((dynamic)this).When((dynamic)e);
 }

@@ -50,45 +50,7 @@ public sealed partial class Game : EventSourcedAggregateRoot
 
     public void Play(Guid playerId, int cell)
     {
-        GuardAgainstInvalidPrerequisites(playerId, cell);
-
-        var cellValue = playerId == _xPlayer ? Cell.X : Cell.O;
-        _boardCells[cell] = cellValue;
-
-        Apply(new CellFilled(playerId, cell));
-
-        if (WinnerDetected(playerId))
-            return;
-
-        DetectFinishedGame();
-    }
-
-    private void GuardAgainstInvalidPrerequisites(Guid playerId, int cell)
-    {
-        if (_isGameFinished)
-        {
-            throw new InvalidOperationException("Game is already finished");
-        }
-
-        if (_xPlayer is null || _oPlayer is null)
-        {
-            throw new InvalidOperationException("Game is not started");
-        }
-
-        if (playerId != _xPlayer && playerId != _oPlayer)
-        {
-            throw new InvalidOperationException("Player is not part of the game");
-        }
-
-        if (_boardCells[cell].IsEmpty == false)
-        {
-            throw new InvalidOperationException("Cell is already filled");
-        }
-        
-        if (_currentPlayer != playerId)
-        {
-            throw new InvalidOperationException("It is not your turn");
-        }
+        throw new NotImplementedException();
     }
 
     private void DetectFinishedGame()
