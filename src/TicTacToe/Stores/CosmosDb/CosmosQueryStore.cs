@@ -12,7 +12,7 @@ internal sealed partial class CosmosEventStore : IQueryStore
 {
     public async Task<ListOfAvailableGames> GetAvailableGames(CancellationToken ct = default)
     {
-        const string id = "GameListAsyncSnapshot";
+        const string id = "ActiveGamesListProjection";
         var partitionKey = new PartitionKey(id);
 
         try
