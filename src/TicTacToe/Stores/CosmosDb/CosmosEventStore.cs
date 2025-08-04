@@ -102,12 +102,12 @@ internal sealed partial class CosmosEventStore(Container container) : IEventStor
             foreach (var storedEvent in events)
             {
                 transactionalBatch.UpsertItem(storedEvent);
-                var response = await transactionalBatch.ExecuteAsync(ct);
+            }
 
-                if (!response.IsSuccessStatusCode && response[0].StatusCode == HttpStatusCode.PreconditionFailed)
-                {
-                    throw new InvalidOperationException("Concurrency error");
-                }
+            var response = await transactionalBatch.ExecuteAsync(ct);
+            if (!response.IsSuccessStatusCode && response[0].StatusCode == HttpStatusCode.PreconditionFailed)
+            {
+                throw new InvalidOperationException("Concurrency error");
             }
         }
     }
